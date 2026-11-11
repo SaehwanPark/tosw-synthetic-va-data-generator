@@ -1,0 +1,24 @@
+{
+  "artifact_kind": "configured",
+  "step": {
+    "bin_map": {
+      "breaks": [
+        54.0,
+        64.0,
+        74.0,
+        84.0
+      ],
+      "labels": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ]
+    },
+    "input_column": "age_cont",
+    "kind": "bin_map",
+    "name": "agegrp",
+    "output_column": "agegrp"
+  }
+}

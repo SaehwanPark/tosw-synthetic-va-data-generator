@@ -1,0 +1,46 @@
+Synthetic CAN bundle fit record
+
+source_file: all_can_2014_v2_ordinalver.parquet
+source_year: 2014
+source_row_count: 4965048
+fitting_row_count: 2482524
+sampling_fraction: 0.5
+sampling_seed: 343
+tabdat_synth_version: 0.2.0
+model_backend: lightgbm (n_estimators=100, verbosity=-1)
+
+column_order:
+   1. age_cont
+   2. agegrp
+   3. BLACK
+   4. Albumin
+   5. AntiPsychotic
+   6. BB
+   7. BUN
+   8. BenZoDiZp
+   9. BetaAgn
+  10. HCC_HXCHF
+  11. HCC_METASCA
+  12. HCC_dementia
+  13. Prior1245
+  14. WBCC
+  15. covwtflag
+  16. cpt21to30fon730
+  17. cptOffVisEst90
+  18. deyo
+  19. diast
+  20. dxAlcohol730
+  21. dxChrAirObstNEC730
+  22. furosemide
+  23. hmgcoa
+  24. lbLymphoSBPL365
+  25. lbRBCSynFlL730
+  26. lbSodimSbpL730
+  27. mentptsd
+  28. nsaid
+  29. pulse
+  30. resp
+  31. sex
+  32. syst
+  33. tiuConsent365
+  34. tiuTeleph730

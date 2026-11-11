@@ -1,0 +1,2016 @@
+name: can2014
+source:
+  path: source/not_distributed.parquet
+  format: parquet
+n_samples: 250000
+random_seed: 343
+model_backend:
+  kind: lightgbm
+  params:
+    n_estimators: 100
+    verbosity: -1
+schema:
+  columns:
+  - name: age_cont
+    data_type: integer
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    minimum: 21.0
+    maximum: 99.0
+  - name: agegrp
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    - '5'
+  - name: BLACK
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+  - name: Albumin
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '99'
+  - name: AntiPsychotic
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: BB
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: BUN
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '2'
+    - '99'
+  - name: BenZoDiZp
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: BetaAgn
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: HCC_HXCHF
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: HCC_METASCA
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: HCC_dementia
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: Prior1245
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '2'
+    - '4'
+    - '99'
+  - name: WBCC
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '2'
+    - '3'
+    - '99'
+  - name: covwtflag
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: cpt21to30fon730
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '99'
+  - name: cptOffVisEst90
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '99'
+  - name: deyo
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '2'
+    - '3'
+    - '99'
+  - name: diast
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '1'
+    - '2'
+    - '99'
+  - name: dxAlcohol730
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: dxChrAirObstNEC730
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: furosemide
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: hmgcoa
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: lbLymphoSBPL365
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '99'
+  - name: lbRBCSynFlL730
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '99'
+  - name: lbSodimSbpL730
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '2'
+    - '3'
+    - '99'
+  - name: mentptsd
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '99'
+  - name: nsaid
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '99'
+  - name: pulse
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '1'
+    - '2'
+    - '99'
+  - name: resp
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '1'
+    - '2'
+    - '99'
+  - name: sex
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '1'
+    - '99'
+  - name: syst
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '1'
+    - '2'
+    - '3'
+    - '99'
+  - name: tiuConsent365
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '2'
+    - '99'
+  - name: tiuTeleph730
+    data_type: categorical
+    role: feature
+    nullable: false
+    missing_value_policy: forbid
+    allowed_values:
+    - '0'
+    - '1'
+    - '2'
+    - '99'
+  - name: hosp_log_odds
+    data_type: float
+    role: outcome
+    nullable: false
+    missing_value_policy: forbid
+  - name: mort_log_odds
+    data_type: float
+    role: outcome
+    nullable: false
+    missing_value_policy: forbid
+  - name: pHosp_1y
+    data_type: float
+    role: outcome
+    nullable: false
+    missing_value_policy: forbid
+  - name: pMort_1y
+    data_type: float
+    role: outcome
+    nullable: false
+    missing_value_policy: forbid
+  - name: Hosp_1y
+    data_type: integer
+    role: outcome
+    nullable: false
+    missing_value_policy: forbid
+  - name: Mort_1y
+    data_type: integer
+    role: outcome
+    nullable: false
+    missing_value_policy: forbid
+steps:
+- name: age_cont
+  kind: truncated_normal
+  output_column: age_cont
+- name: agegrp
+  kind: bin_map
+  output_column: agegrp
+  input_column: age_cont
+  bin_map:
+    breaks:
+    - 54.0
+    - 64.0
+    - 74.0
+    - 84.0
+    labels:
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    - '5'
+- name: BLACK_model
+  kind: categorical_model
+  output_column: BLACK
+  parent_columns:
+  - agegrp
+  feature_columns:
+  - agegrp
+- name: Albumin_model
+  kind: categorical_model
+  output_column: Albumin
+  parent_columns:
+  - agegrp
+  - BLACK
+  feature_columns:
+  - agegrp
+  - BLACK
+- name: AntiPsychotic_model
+  kind: categorical_model
+  output_column: AntiPsychotic
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+- name: BB_model
+  kind: categorical_model
+  output_column: BB
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+- name: BUN_model
+  kind: categorical_model
+  output_column: BUN
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+- name: BenZoDiZp_model
+  kind: categorical_model
+  output_column: BenZoDiZp
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+- name: BetaAgn_model
+  kind: categorical_model
+  output_column: BetaAgn
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+- name: HCC_HXCHF_model
+  kind: categorical_model
+  output_column: HCC_HXCHF
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+- name: HCC_METASCA_model
+  kind: categorical_model
+  output_column: HCC_METASCA
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+- name: HCC_dementia_model
+  kind: categorical_model
+  output_column: HCC_dementia
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+- name: Prior1245_model
+  kind: categorical_model
+  output_column: Prior1245
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+- name: WBCC_model
+  kind: categorical_model
+  output_column: WBCC
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+- name: covwtflag_model
+  kind: categorical_model
+  output_column: covwtflag
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+- name: cpt21to30fon730_model
+  kind: categorical_model
+  output_column: cpt21to30fon730
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+- name: cptOffVisEst90_model
+  kind: categorical_model
+  output_column: cptOffVisEst90
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+- name: deyo_model
+  kind: categorical_model
+  output_column: deyo
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+- name: diast_model
+  kind: categorical_model
+  output_column: diast
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+- name: dxAlcohol730_model
+  kind: categorical_model
+  output_column: dxAlcohol730
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+- name: dxChrAirObstNEC730_model
+  kind: categorical_model
+  output_column: dxChrAirObstNEC730
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+- name: furosemide_model
+  kind: categorical_model
+  output_column: furosemide
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+- name: hmgcoa_model
+  kind: categorical_model
+  output_column: hmgcoa
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+- name: lbLymphoSBPL365_model
+  kind: categorical_model
+  output_column: lbLymphoSBPL365
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+- name: lbRBCSynFlL730_model
+  kind: categorical_model
+  output_column: lbRBCSynFlL730
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+- name: lbSodimSbpL730_model
+  kind: categorical_model
+  output_column: lbSodimSbpL730
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+- name: mentptsd_model
+  kind: categorical_model
+  output_column: mentptsd
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+- name: nsaid_model
+  kind: categorical_model
+  output_column: nsaid
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+- name: pulse_model
+  kind: categorical_model
+  output_column: pulse
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+- name: resp_model
+  kind: categorical_model
+  output_column: resp
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+- name: sex_model
+  kind: categorical_model
+  output_column: sex
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+  - resp
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+  - resp
+- name: syst_model
+  kind: categorical_model
+  output_column: syst
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+  - resp
+  - sex
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+  - resp
+  - sex
+- name: tiuConsent365_model
+  kind: categorical_model
+  output_column: tiuConsent365
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+  - resp
+  - sex
+  - syst
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+  - resp
+  - sex
+  - syst
+- name: tiuTeleph730_model
+  kind: categorical_model
+  output_column: tiuTeleph730
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+  - resp
+  - sex
+  - syst
+  - tiuConsent365
+  feature_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+  - resp
+  - sex
+  - syst
+  - tiuConsent365
+- name: hosp_log_odds
+  kind: coefficient_sum
+  output_column: hosp_log_odds
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+  - resp
+  - sex
+  - syst
+  - tiuConsent365
+  - tiuTeleph730
+  coefficient_sum:
+    intercept: 3.319921815594095
+    reference_value: '99'
+    terms:
+    - feature_name: agegrp
+      coefficient: 0.11195135687796806
+      value: '1'
+    - feature_name: agegrp
+      coefficient: 0.3829908347336344
+      value: '2'
+    - feature_name: agegrp
+      coefficient: 0.1170440313539304
+      value: '3'
+    - feature_name: agegrp
+      coefficient: -0.0005318645488637682
+      value: '4'
+    - feature_name: Albumin
+      coefficient: -0.03809892539309278
+      value: '0'
+    - feature_name: Albumin
+      coefficient: 0.25407421773906447
+      value: '1'
+    - feature_name: AntiPsychotic
+      coefficient: -0.3298482906983808
+      value: '0'
+    - feature_name: BB
+      coefficient: -0.2895503337138029
+      value: '0'
+    - feature_name: BUN
+      coefficient: 0.2543661084368837
+      value: '0'
+    - feature_name: BUN
+      coefficient: 0.23868025203403645
+      value: '1'
+    - feature_name: BUN
+      coefficient: 0.2937981776666459
+      value: '2'
+    - feature_name: covwtflag
+      coefficient: -0.25025532925442856
+      value: '0'
+    - feature_name: cpt21to30fon730
+      coefficient: -0.5589833785819982
+      value: '0'
+    - feature_name: cpt21to30fon730
+      coefficient: -0.19968189621269836
+      value: '1'
+    - feature_name: cptOffVisEst90
+      coefficient: -0.9782689213227374
+      value: '0'
+    - feature_name: cptOffVisEst90
+      coefficient: -0.5684071312689593
+      value: '1'
+    - feature_name: deyo
+      coefficient: -0.6788404706458051
+      value: '0'
+    - feature_name: deyo
+      coefficient: -0.4986713060119847
+      value: '1'
+    - feature_name: deyo
+      coefficient: -0.35097959162233605
+      value: '2'
+    - feature_name: deyo
+      coefficient: -0.2059603623205303
+      value: '3'
+    - feature_name: diast
+      coefficient: -0.09811790600445333
+      value: '1'
+    - feature_name: diast
+      coefficient: -0.14037557605784087
+      value: '2'
+    - feature_name: dxAlcohol730
+      coefficient: -0.5715002256100432
+      value: '0'
+    - feature_name: dxChrAirObstNEC730
+      coefficient: -0.2520873149332106
+      value: '0'
+    - feature_name: furosemide
+      coefficient: -0.1945527443791755
+      value: '0'
+    - feature_name: HCC_dementia
+      coefficient: -0.3374570797072577
+      value: '0'
+    - feature_name: HCC_HXCHF
+      coefficient: -0.28190262100546126
+      value: '0'
+    - feature_name: HCC_METASCA
+      coefficient: -0.14062464739308836
+      value: '0'
+    - feature_name: hmgcoa
+      coefficient: -0.057526048032501505
+      value: '0'
+    - feature_name: lbLymphoSBPL365
+      coefficient: -0.3271382198608108
+      value: '0'
+    - feature_name: lbLymphoSBPL365
+      coefficient: -0.17376987786663692
+      value: '1'
+    - feature_name: lbRBCSynFlL730
+      coefficient: -0.8370898823640706
+      value: '0'
+    - feature_name: lbRBCSynFlL730
+      coefficient: -0.5402929297898932
+      value: '1'
+    - feature_name: mentptsd
+      coefficient: -0.2718803207364405
+      value: '0'
+    - feature_name: mentptsd
+      coefficient: -0.06493459708622953
+      value: '1'
+    - feature_name: Prior1245
+      coefficient: -0.5094980935687793
+      value: '0'
+    - feature_name: Prior1245
+      coefficient: -0.2867314522456794
+      value: '1'
+    - feature_name: Prior1245
+      coefficient: -0.5337381860875798
+      value: '2'
+    - feature_name: Prior1245
+      coefficient: -0.05731908915786009
+      value: '4'
+    - feature_name: pulse
+      coefficient: -0.32841864894363376
+      value: '1'
+    - feature_name: pulse
+      coefficient: -0.2311486046328702
+      value: '2'
+    - feature_name: resp
+      coefficient: -0.05557713260514261
+      value: '1'
+    - feature_name: resp
+      coefficient: -0.020200919076358015
+      value: '2'
+    - feature_name: syst
+      coefficient: -0.21048681926710555
+      value: '1'
+    - feature_name: syst
+      coefficient: -0.29121559010083686
+      value: '2'
+    - feature_name: syst
+      coefficient: -0.12949914240995997
+      value: '3'
+- name: mort_log_odds
+  kind: coefficient_sum
+  output_column: mort_log_odds
+  parent_columns:
+  - agegrp
+  - BLACK
+  - Albumin
+  - AntiPsychotic
+  - BB
+  - BUN
+  - BenZoDiZp
+  - BetaAgn
+  - HCC_HXCHF
+  - HCC_METASCA
+  - HCC_dementia
+  - Prior1245
+  - WBCC
+  - covwtflag
+  - cpt21to30fon730
+  - cptOffVisEst90
+  - deyo
+  - diast
+  - dxAlcohol730
+  - dxChrAirObstNEC730
+  - furosemide
+  - hmgcoa
+  - lbLymphoSBPL365
+  - lbRBCSynFlL730
+  - lbSodimSbpL730
+  - mentptsd
+  - nsaid
+  - pulse
+  - resp
+  - sex
+  - syst
+  - tiuConsent365
+  - tiuTeleph730
+  coefficient_sum:
+    intercept: 3.1630656359719795
+    reference_value: '99'
+    terms:
+    - feature_name: agegrp
+      coefficient: -3.041659007749423
+      value: '1'
+    - feature_name: agegrp
+      coefficient: -1.9445312535988006
+      value: '2'
+    - feature_name: agegrp
+      coefficient: -1.4758485834234012
+      value: '3'
+    - feature_name: agegrp
+      coefficient: -0.7912478216455152
+      value: '4'
+    - feature_name: Albumin
+      coefficient: -0.13557725055521463
+      value: '0'
+    - feature_name: Albumin
+      coefficient: 0.5377253900720375
+      value: '1'
+    - feature_name: AntiPsychotic
+      coefficient: -0.23653245527986028
+      value: '0'
+    - feature_name: BB
+      coefficient: -0.14583384345121053
+      value: '0'
+    - feature_name: BenZoDiZp
+      coefficient: -0.14692869865125324
+      value: '0'
+    - feature_name: BetaAgn
+      coefficient: -0.30459776092306867
+      value: '0'
+    - feature_name: BUN
+      coefficient: -0.43652617992858445
+      value: '0'
+    - feature_name: BUN
+      coefficient: -0.46645002467694674
+      value: '1'
+    - feature_name: BUN
+      coefficient: -0.11489077691928529
+      value: '2'
+    - feature_name: covwtflag
+      coefficient: -0.5167087346352488
+      value: '0'
+    - feature_name: cpt21to30fon730
+      coefficient: -0.1953284762154348
+      value: '0'
+    - feature_name: cpt21to30fon730
+      coefficient: -0.04370541178013787
+      value: '1'
+    - feature_name: cptOffVisEst90
+      coefficient: 0.25877002111797287
+      value: '0'
+    - feature_name: cptOffVisEst90
+      coefficient: -0.02102949673572263
+      value: '1'
+    - feature_name: deyo
+      coefficient: -0.6980769959221858
+      value: '0'
+    - feature_name: deyo
+      coefficient: -0.4394886246641741
+      value: '1'
+    - feature_name: deyo
+      coefficient: -0.3545158906773217
+      value: '2'
+    - feature_name: deyo
+      coefficient: -0.2569899760554582
+      value: '3'
+    - feature_name: diast
+      coefficient: 0.14361520931713792
+      value: '1'
+    - feature_name: diast
+      coefficient: -0.04095153522957887
+      value: '2'
+    - feature_name: dxAlcohol730
+      coefficient: -0.29849906027385303
+      value: '0'
+    - feature_name: dxChrAirObstNEC730
+      coefficient: -0.3027158545945407
+      value: '0'
+    - feature_name: furosemide
+      coefficient: -0.2992441998276141
+      value: '0'
+    - feature_name: HCC_dementia
+      coefficient: -0.45778099619275336
+      value: '0'
+    - feature_name: HCC_HXCHF
+      coefficient: -0.2537350371171132
+      value: '0'
+    - feature_name: HCC_METASCA
+      coefficient: -0.7005136766217787
+      value: '0'
+    - feature_name: hmgcoa
+      coefficient: 0.2832049627184717
+      value: '0'
+    - feature_name: lbLymphoSBPL365
+      coefficient: -0.2811993636895115
+      value: '0'
+    - feature_name: lbLymphoSBPL365
+      coefficient: 0.00647749636701922
+      value: '1'
+    - feature_name: lbRBCSynFlL730
+      coefficient: -0.2378986535995422
+      value: '0'
+    - feature_name: lbRBCSynFlL730
+      coefficient: 0.08751336104963463
+      value: '1'
+    - feature_name: lbSodimSbpL730
+      coefficient: -0.3812581362577485
+      value: '0'
+    - feature_name: lbSodimSbpL730
+      coefficient: -0.20222695564803453
+      value: '1'
+    - feature_name: lbSodimSbpL730
+      coefficient: -0.16016863702173315
+      value: '2'
+    - feature_name: lbSodimSbpL730
+      coefficient: -0.12515491303381632
+      value: '3'
+    - feature_name: mentptsd
+      coefficient: -0.12344917283690982
+      value: '0'
+    - feature_name: mentptsd
+      coefficient: -0.2091478278055237
+      value: '1'
+    - feature_name: nsaid
+      coefficient: 0.21989580566004946
+      value: '0'
+    - feature_name: Prior1245
+      coefficient: -0.08505239529071978
+      value: '0'
+    - feature_name: Prior1245
+      coefficient: -0.2681967844722317
+      value: '1'
+    - feature_name: Prior1245
+      coefficient: -0.23795377489564162
+      value: '2'
+    - feature_name: Prior1245
+      coefficient: 0.03569584899839834
+      value: '4'
+    - feature_name: pulse
+      coefficient: -0.6231317038721609
+      value: '1'
+    - feature_name: pulse
+      coefficient: -0.38048078381549544
+      value: '2'
+    - feature_name: resp
+      coefficient: -0.1418368172932178
+      value: '1'
+    - feature_name: resp
+      coefficient: -0.0805804862021008
+      value: '2'
+    - feature_name: sex
+      coefficient: -0.4436664896872696
+      value: '1'
+    - feature_name: syst
+      coefficient: 0.2540071756139976
+      value: '1'
+    - feature_name: syst
+      coefficient: -0.06358133697337809
+      value: '2'
+    - feature_name: syst
+      coefficient: -0.12984733509751428
+      value: '3'
+    - feature_name: tiuConsent365
+      coefficient: 0.21328914021877987
+      value: '0'
+    - feature_name: tiuConsent365
+      coefficient: 0.014395085165553323
+      value: '1'
+    - feature_name: tiuConsent365
+      coefficient: -0.06926461383922747
+      value: '2'
+    - feature_name: tiuTeleph730
+      coefficient: -0.19675493847912373
+      value: '0'
+    - feature_name: tiuTeleph730
+      coefficient: -0.11961445814938668
+      value: '1'
+    - feature_name: tiuTeleph730
+      coefficient: -0.06246268326328519
+      value: '2'
+    - feature_name: WBCC
+      coefficient: -0.2429443613064096
+      value: '0'
+    - feature_name: WBCC
+      coefficient: 1.0180812918827922
+      value: '1'
+    - feature_name: WBCC
+      coefficient: 0.02920437603394846
+      value: '2'
+    - feature_name: WBCC
+      coefficient: 0.19218189180658704
+      value: '3'
+- name: pHosp_1y
+  kind: sigmoid_probability
+  output_column: pHosp_1y
+  input_column: hosp_log_odds
+- name: pMort_1y
+  kind: sigmoid_probability
+  output_column: pMort_1y
+  input_column: mort_log_odds
+- name: Hosp_1y
+  kind: bernoulli_response
+  output_column: Hosp_1y
+  input_column: hosp_log_odds
+  response:
+    intercept: 0.0
+    slope: 1.0
+- name: Mort_1y
+  kind: bernoulli_response
+  output_column: Mort_1y
+  input_column: mort_log_odds
+  response:
+    intercept: 0.0
+    slope: 1.0

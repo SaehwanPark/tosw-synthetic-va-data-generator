@@ -1,0 +1,13 @@
+{
+  "artifact_kind": "truncated_normal",
+  "maximum": 99.0,
+  "minimum": 21.0,
+  "observed_mean": 63.00987744730766,
+  "observed_std": 15.93876347684912,
+  "round_to_int": true,
+  "step": {
+    "kind": "truncated_normal",
+    "name": "age_cont",
+    "output_column": "age_cont"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "artifact_kind": "categorical_model",
+  "backend_kind": "lightgbm",
+  "feature_order": [
+    "agegrp_4",
+    "agegrp_2",
+    "agegrp_3",
+    "agegrp_5",
+    "agegrp_1",
+    "BLACK_0",
+    "BLACK_1",
+    "Albumin_0",
+    "Albumin_99",
+    "Albumin_1",
+    "AntiPsychotic_0",
+    "AntiPsychotic_99"
+  ],
+  "input_columns": [
+    "agegrp",
+    "BLACK",
+    "Albumin",
+    "AntiPsychotic"
+  ],
+  "learned_categories": [
+    "0",
+    "99"
+  ],
+  "model_filename": "005_BB.pkl",
+  "step": {
+    "feature_columns": [
+      "agegrp",
+      "BLACK",
+      "Albumin",
+      "AntiPsychotic"
+    ],
+    "kind": "categorical_model",
+    "name": "BB_model",
+    "output_column": "BB",
+    "parent_columns": [
+      "agegrp",
+      "BLACK",
+      "Albumin",
+      "AntiPsychotic"
+    ]
+  }
+}

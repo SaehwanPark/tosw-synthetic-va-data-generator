@@ -1,0 +1,13 @@
+{
+  "artifact_kind": "configured",
+  "step": {
+    "input_column": "hosp_log_odds",
+    "kind": "bernoulli_response",
+    "name": "Hosp_1y",
+    "output_column": "Hosp_1y",
+    "response": {
+      "intercept": 0.0,
+      "slope": 1.0
+    }
+  }
+}

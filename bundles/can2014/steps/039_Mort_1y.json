@@ -1,0 +1,13 @@
+{
+  "artifact_kind": "configured",
+  "step": {
+    "input_column": "mort_log_odds",
+    "kind": "bernoulli_response",
+    "name": "Mort_1y",
+    "output_column": "Mort_1y",
+    "response": {
+      "intercept": 0.0,
+      "slope": 1.0
+    }
+  }
+}

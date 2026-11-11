@@ -1,0 +1,30 @@
+{
+  "artifact_kind": "categorical_model",
+  "backend_kind": "lightgbm",
+  "feature_order": [
+    "agegrp_4",
+    "agegrp_2",
+    "agegrp_3",
+    "agegrp_5",
+    "agegrp_1"
+  ],
+  "input_columns": [
+    "agegrp"
+  ],
+  "learned_categories": [
+    "0",
+    "1"
+  ],
+  "model_filename": "002_BLACK.pkl",
+  "step": {
+    "feature_columns": [
+      "agegrp"
+    ],
+    "kind": "categorical_model",
+    "name": "BLACK_model",
+    "output_column": "BLACK",
+    "parent_columns": [
+      "agegrp"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "artifact_counts": {
+    "categorical_model": 32,
+    "configured": 7,
+    "truncated_normal": 1
+  },
+  "bundle_format_version": 2,
+  "created_at": "2026-11-11T18:00:27.637638+00:00",
+  "dependency_versions": {
+    "PyYAML": "6.0.3",
+    "lightgbm": "4.7.0",
+    "numpy": "2.5.4",
+    "pandas": "3.1.1",
+    "polars": "2.1.0",
+    "pyarrow": "26.0.1",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1"
+  },
+  "model_backend": {
+    "kind": "lightgbm",
+    "params": {
+      "n_estimators": 100,
+      "verbosity": -1
+    }
+  },
+  "package_version": "0.2.0",
+  "platform": {
+    "machine": "arm64",
+    "platform": "macOS-27.2.1-arm64-arm-64bit-Mach-O",
+    "release": "27.2.0",
+    "system": "Darwin"
+  },
+  "python": {
+    "implementation": "CPython",
+    "version": "3.13.3"
+  },
+  "schema_hash": "c1240170939e2e580342f422939c0baf4952e36620fe63bf004bcb25c85aae4b",
+  "source": {
+    "format": "parquet",
+    "member": null
+  },
+  "spec_hash": "c00a3e73a4514a617612eea1409204fb85b9e41b959e5ac648077173042c66e2",
+  "step_count": 40
+}

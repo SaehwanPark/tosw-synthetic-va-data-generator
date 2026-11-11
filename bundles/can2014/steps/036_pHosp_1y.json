@@ -1,0 +1,9 @@
+{
+  "artifact_kind": "configured",
+  "step": {
+    "input_column": "hosp_log_odds",
+    "kind": "sigmoid_probability",
+    "name": "pHosp_1y",
+    "output_column": "pHosp_1y"
+  }
+}

@@ -1,0 +1,2357 @@
+# Scenario manifest for the semi-synthetic VA CAN datasets.
+#
+# Each record is one historical scenario name. Records with `enabled: true`
+# form the published scenario grid and are written by
+#     python -m tosw_synth generate --enabled
+#
+# Fields:
+#   age_shift       shift added to the truncated-normal mean age, in years
+#   alpha           outcome log-odds intercept adjustment
+#   beta            outcome log-odds slope multiplier (must stay positive)
+#   priority_shift  percentage-point shift from priority groups 6-8 to group 1
+#   seed            base seed; a replicate uses seed + replicate_index
+#   n_samples       historical row count
+#
+# Records with `enabled: false` are retained so the historical scenario
+# families stay documented. They are never written unless requested by name.
+# `seed: null` means the historical scripts assigned indexes from more than
+# one loop, so no single base seed applies.
+scenarios:
+  - name: synth_t1_ageshift
+    enabled: true
+    family: baseline
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    n_samples: 250000
+    seed: 343
+  - name: synth_t1_prior1245
+    enabled: false
+    family: priority_group
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 0
+    n_samples: 250000
+    seed: 344
+  - name: synth_t2_ageshift0
+    enabled: true
+    family: age_shift
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    n_samples: 250000
+    seed: 345
+  - name: synth_t2_ageshift2
+    enabled: true
+    family: age_shift
+    age_shift: 2
+    alpha: 0
+    beta: 1
+    n_samples: 250000
+    seed: 346
+  - name: synth_t2_ageshift4
+    enabled: true
+    family: age_shift
+    age_shift: 4
+    alpha: 0
+    beta: 1
+    n_samples: 250000
+    seed: 347
+  - name: synth_t2_ageshift6
+    enabled: true
+    family: age_shift
+    age_shift: 6
+    alpha: 0
+    beta: 1
+    n_samples: 250000
+    seed: 348
+  - name: synth_t2_ageshift8
+    enabled: true
+    family: age_shift
+    age_shift: 8
+    alpha: 0
+    beta: 1
+    n_samples: 250000
+    seed: 349
+  - name: synth_t2_ageshift10
+    enabled: true
+    family: age_shift
+    age_shift: 10
+    alpha: 0
+    beta: 1
+    n_samples: 250000
+    seed: 350
+  - name: synth_t2_priorityshift0
+    enabled: false
+    family: priority_group
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 0
+    n_samples: 250000
+    seed: 351
+  - name: synth_t2_priorityshift5
+    enabled: false
+    family: priority_group
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 5
+    n_samples: 250000
+    seed: 352
+  - name: synth_t2_priorityshift10
+    enabled: false
+    family: priority_group
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 10
+    n_samples: 250000
+    seed: 353
+  - name: synth_t2_priorityshift15
+    enabled: false
+    family: priority_group
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 15
+    n_samples: 250000
+    seed: 354
+  - name: synth_t2_priorityshift20
+    enabled: false
+    family: priority_group
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 20
+    n_samples: 250000
+    seed: 355
+  - name: synth_t2_priorityshift25
+    enabled: false
+    family: priority_group
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 25
+    n_samples: 250000
+    seed: 356
+  - name: synth_t2_slope120
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 1.2
+    n_samples: 250000
+    seed: 357
+  - name: synth_t2_slope118
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 1.18
+    n_samples: 250000
+    seed: 358
+  - name: synth_t2_slope116
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 1.16
+    n_samples: 250000
+    seed: 359
+  - name: synth_t2_slope114
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 1.14
+    n_samples: 250000
+    seed: 360
+  - name: synth_t2_slope112
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 1.12
+    n_samples: 250000
+    seed: 361
+  - name: synth_t2_slope110
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 1.1
+    n_samples: 250000
+    seed: 362
+  - name: synth_t2_slope108
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 1.08
+    n_samples: 250000
+    seed: 363
+  - name: synth_t2_slope106
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 1.06
+    n_samples: 250000
+    seed: 364
+  - name: synth_t2_slope104
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 1.04
+    n_samples: 250000
+    seed: 365
+  - name: synth_t2_slope102
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 1.02
+    n_samples: 250000
+    seed: 366
+  - name: synth_t2_slope100
+    enabled: true
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 1.0
+    n_samples: 250000
+    seed: 367
+  - name: synth_t2_slope98
+    enabled: true
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.98
+    n_samples: 250000
+    seed: 368
+  - name: synth_t2_slope96
+    enabled: true
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.96
+    n_samples: 250000
+    seed: 369
+  - name: synth_t2_slope94
+    enabled: true
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.94
+    n_samples: 250000
+    seed: 370
+  - name: synth_t2_slope92
+    enabled: true
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.92
+    n_samples: 250000
+    seed: 371
+  - name: synth_t2_slope90
+    enabled: true
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.9
+    n_samples: 250000
+    seed: 372
+  - name: synth_t2_slope88
+    enabled: true
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.88
+    n_samples: 250000
+    seed: 373
+  - name: synth_t2_slope86
+    enabled: true
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.86
+    n_samples: 250000
+    seed: 374
+  - name: synth_t2_slope84
+    enabled: true
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.84
+    n_samples: 250000
+    seed: 375
+  - name: synth_t2_slope82
+    enabled: true
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.82
+    n_samples: 250000
+    seed: 376
+  - name: synth_t2_slope80
+    enabled: true
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.8
+    n_samples: 250000
+    seed: 377
+  - name: synth_t2_slope78
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.78
+    n_samples: 250000
+    seed: 378
+  - name: synth_t2_slope76
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.76
+    n_samples: 250000
+    seed: 379
+  - name: synth_t2_slope74
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.74
+    n_samples: 250000
+    seed: 380
+  - name: synth_t2_slope72
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.72
+    n_samples: 250000
+    seed: 381
+  - name: synth_t2_slope70
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.7
+    n_samples: 250000
+    seed: 382
+  - name: synth_t2_slope68
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.68
+    n_samples: 250000
+    seed: 383
+  - name: synth_t2_slope66
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.66
+    n_samples: 250000
+    seed: 384
+  - name: synth_t2_slope64
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.64
+    n_samples: 250000
+    seed: 385
+  - name: synth_t2_slope62
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.62
+    n_samples: 250000
+    seed: 386
+  - name: synth_t2_slope60
+    enabled: false
+    family: slope
+    age_shift: 0
+    alpha: 0
+    beta: 0.6
+    n_samples: 250000
+    seed: 387
+  - name: synth_t2_intercept0
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: 0.0
+    beta: 1
+    n_samples: 250000
+    seed: 388
+  - name: synth_t2_intercept-5
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.05
+    beta: 1
+    n_samples: 250000
+    seed: 389
+  - name: synth_t2_intercept-10
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.1
+    beta: 1
+    n_samples: 250000
+    seed: 390
+  - name: synth_t2_intercept-15
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.15
+    beta: 1
+    n_samples: 250000
+    seed: 391
+  - name: synth_t2_intercept-20
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.2
+    beta: 1
+    n_samples: 250000
+    seed: 392
+  - name: synth_t2_intercept-25
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.25
+    beta: 1
+    n_samples: 250000
+    seed: 393
+  - name: synth_t2_intercept-30
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.3
+    beta: 1
+    n_samples: 250000
+    seed: 394
+  - name: synth_t2_intercept-35
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.35
+    beta: 1
+    n_samples: 250000
+    seed: 395
+  - name: synth_t2_intercept-40
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.4
+    beta: 1
+    n_samples: 250000
+    seed: 396
+  - name: synth_t2_intercept-45
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.45
+    beta: 1
+    n_samples: 250000
+    seed: 397
+  - name: synth_t2_intercept-50
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.5
+    beta: 1
+    n_samples: 250000
+    seed: 398
+  - name: synth_t2_intercept-55
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.55
+    beta: 1
+    n_samples: 250000
+    seed: 399
+  - name: synth_t2_intercept-60
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.6
+    beta: 1
+    n_samples: 250000
+    seed: 400
+  - name: synth_t2_intercept-65
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.65
+    beta: 1
+    n_samples: 250000
+    seed: 401
+  - name: synth_t2_intercept-70
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.7
+    beta: 1
+    n_samples: 250000
+    seed: 402
+  - name: synth_t2_intercept-75
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.75
+    beta: 1
+    n_samples: 250000
+    seed: 403
+  - name: synth_t2_intercept-80
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.8
+    beta: 1
+    n_samples: 250000
+    seed: 404
+  - name: synth_t2_intercept-85
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.85
+    beta: 1
+    n_samples: 250000
+    seed: 405
+  - name: synth_t2_intercept-90
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.9
+    beta: 1
+    n_samples: 250000
+    seed: 406
+  - name: synth_t2_intercept-95
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -0.95
+    beta: 1
+    n_samples: 250000
+    seed: 407
+  - name: synth_t2_intercept-100
+    enabled: true
+    family: intercept
+    age_shift: 0
+    alpha: -1.0
+    beta: 1
+    n_samples: 250000
+    seed: 408
+  - name: hxchf/synth_t1_ageshift
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t1_prior1245
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 0
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_ageshift0
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_ageshift2
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 2
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_ageshift4
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 4
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_ageshift6
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 6
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_ageshift8
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 8
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_ageshift10
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 10
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_priorityshift0
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 0
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_priorityshift5
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 5
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_priorityshift10
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 10
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_priorityshift15
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 15
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_priorityshift20
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 20
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_priorityshift25
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 25
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope120
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1.2
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope118
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1.18
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope116
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1.16
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope114
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1.14
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope112
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1.12
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope110
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1.1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope108
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1.08
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope106
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1.06
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope104
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1.04
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope102
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1.02
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope100
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 1.0
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope98
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.98
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope96
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.96
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope94
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.94
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope92
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.92
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope90
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.9
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope88
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.88
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope86
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.86
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope84
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.84
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope82
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.82
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope80
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.8
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope78
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.78
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope76
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.76
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope74
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.74
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope72
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.72
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope70
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.7
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope68
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.68
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope66
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.66
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope64
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.64
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope62
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.62
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_slope60
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0
+    beta: 0.6
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept0
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: 0.0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-5
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.05
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-10
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.1
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-15
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.15
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-20
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.2
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-25
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.25
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-30
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.3
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-35
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.35
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-40
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.4
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-45
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.45
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-50
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.5
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-55
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.55
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-60
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.6
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-65
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.65
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-70
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.7
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-75
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.75
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-80
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.8
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-85
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.85
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-90
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.9
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-95
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -0.95
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: hxchf/synth_t2_intercept-100
+    enabled: false
+    family: hxchf_subset
+    subset: hxchf
+    age_shift: 0
+    alpha: -1.0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t1_ageshift
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t1_prior1245
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 0
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_ageshift0
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_ageshift2
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 2
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_ageshift4
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 4
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_ageshift6
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 6
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_ageshift8
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 8
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_ageshift10
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 10
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_priorityshift0
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 0
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_priorityshift5
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 5
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_priorityshift10
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 10
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_priorityshift15
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 15
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_priorityshift20
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 20
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_priorityshift25
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 25
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope120
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1.2
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope118
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1.18
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope116
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1.16
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope114
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1.14
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope112
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1.12
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope110
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1.1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope108
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1.08
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope106
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1.06
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope104
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1.04
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope102
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1.02
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope100
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 1.0
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope98
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.98
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope96
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.96
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope94
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.94
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope92
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.92
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope90
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.9
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope88
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.88
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope86
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.86
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope84
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.84
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope82
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.82
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope80
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.8
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope78
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.78
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope76
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.76
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope74
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.74
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope72
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.72
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope70
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.7
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope68
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.68
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope66
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.66
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope64
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.64
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope62
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.62
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_slope60
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0
+    beta: 0.6
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept0
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: 0.0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-5
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.05
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-10
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.1
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-15
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.15
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-20
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.2
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-25
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.25
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-30
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.3
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-35
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.35
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-40
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.4
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-45
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.45
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-50
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.5
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-55
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.55
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-60
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.6
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-65
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.65
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-70
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.7
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-75
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.75
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-80
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.8
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-85
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.85
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-90
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.9
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-95
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -0.95
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: metasca/synth_t2_intercept-100
+    enabled: false
+    family: metasca_subset
+    subset: metasca
+    age_shift: 0
+    alpha: -1.0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t1_ageshift
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t1_prior1245
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 0
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_ageshift0
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_ageshift2
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 2
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_ageshift4
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 4
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_ageshift6
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 6
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_ageshift8
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 8
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_ageshift10
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 10
+    alpha: 0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_priorityshift0
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 0
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_priorityshift5
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 5
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_priorityshift10
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 10
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_priorityshift15
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 15
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_priorityshift20
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 20
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_priorityshift25
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1
+    priority_shift: 25
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope120
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1.2
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope118
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1.18
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope116
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1.16
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope114
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1.14
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope112
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1.12
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope110
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1.1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope108
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1.08
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope106
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1.06
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope104
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1.04
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope102
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1.02
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope100
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 1.0
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope98
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.98
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope96
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.96
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope94
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.94
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope92
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.92
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope90
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.9
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope88
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.88
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope86
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.86
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope84
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.84
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope82
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.82
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope80
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.8
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope78
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.78
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope76
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.76
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope74
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.74
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope72
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.72
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope70
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.7
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope68
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.68
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope66
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.66
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope64
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.64
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope62
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.62
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_slope60
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0
+    beta: 0.6
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept0
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: 0.0
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-5
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.05
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-10
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.1
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-15
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.15
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-20
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.2
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-25
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.25
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-30
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.3
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-35
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.35
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-40
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.4
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-45
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.45
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-50
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.5
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-55
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.55
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-60
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.6
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-65
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.65
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-70
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.7
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-75
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.75
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-80
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.8
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-85
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.85
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-90
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.9
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-95
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -0.95
+    beta: 1
+    n_samples: 500000
+    seed: null
+  - name: dementia/synth_t2_intercept-100
+    enabled: false
+    family: dementia_subset
+    subset: dementia
+    age_shift: 0
+    alpha: -1.0
+    beta: 1
+    n_samples: 500000
+    seed: null

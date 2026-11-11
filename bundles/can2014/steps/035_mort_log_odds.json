@@ -1,0 +1,369 @@
+{
+  "artifact_kind": "configured",
+  "step": {
+    "coefficient_sum": {
+      "intercept": 3.1630656359719795,
+      "reference_value": "99",
+      "terms": [
+        {
+          "coefficient": -3.041659007749423,
+          "feature_name": "agegrp",
+          "value": "1"
+        },
+        {
+          "coefficient": -1.9445312535988006,
+          "feature_name": "agegrp",
+          "value": "2"
+        },
+        {
+          "coefficient": -1.4758485834234012,
+          "feature_name": "agegrp",
+          "value": "3"
+        },
+        {
+          "coefficient": -0.7912478216455152,
+          "feature_name": "agegrp",
+          "value": "4"
+        },
+        {
+          "coefficient": -0.13557725055521463,
+          "feature_name": "Albumin",
+          "value": "0"
+        },
+        {
+          "coefficient": 0.5377253900720375,
+          "feature_name": "Albumin",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.23653245527986028,
+          "feature_name": "AntiPsychotic",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.14583384345121053,
+          "feature_name": "BB",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.14692869865125324,
+          "feature_name": "BenZoDiZp",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.30459776092306867,
+          "feature_name": "BetaAgn",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.43652617992858445,
+          "feature_name": "BUN",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.46645002467694674,
+          "feature_name": "BUN",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.11489077691928529,
+          "feature_name": "BUN",
+          "value": "2"
+        },
+        {
+          "coefficient": -0.5167087346352488,
+          "feature_name": "covwtflag",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.1953284762154348,
+          "feature_name": "cpt21to30fon730",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.04370541178013787,
+          "feature_name": "cpt21to30fon730",
+          "value": "1"
+        },
+        {
+          "coefficient": 0.25877002111797287,
+          "feature_name": "cptOffVisEst90",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.02102949673572263,
+          "feature_name": "cptOffVisEst90",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.6980769959221858,
+          "feature_name": "deyo",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.4394886246641741,
+          "feature_name": "deyo",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.3545158906773217,
+          "feature_name": "deyo",
+          "value": "2"
+        },
+        {
+          "coefficient": -0.2569899760554582,
+          "feature_name": "deyo",
+          "value": "3"
+        },
+        {
+          "coefficient": 0.14361520931713792,
+          "feature_name": "diast",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.04095153522957887,
+          "feature_name": "diast",
+          "value": "2"
+        },
+        {
+          "coefficient": -0.29849906027385303,
+          "feature_name": "dxAlcohol730",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.3027158545945407,
+          "feature_name": "dxChrAirObstNEC730",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.2992441998276141,
+          "feature_name": "furosemide",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.45778099619275336,
+          "feature_name": "HCC_dementia",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.2537350371171132,
+          "feature_name": "HCC_HXCHF",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.7005136766217787,
+          "feature_name": "HCC_METASCA",
+          "value": "0"
+        },
+        {
+          "coefficient": 0.2832049627184717,
+          "feature_name": "hmgcoa",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.2811993636895115,
+          "feature_name": "lbLymphoSBPL365",
+          "value": "0"
+        },
+        {
+          "coefficient": 0.00647749636701922,
+          "feature_name": "lbLymphoSBPL365",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.2378986535995422,
+          "feature_name": "lbRBCSynFlL730",
+          "value": "0"
+        },
+        {
+          "coefficient": 0.08751336104963463,
+          "feature_name": "lbRBCSynFlL730",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.3812581362577485,
+          "feature_name": "lbSodimSbpL730",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.20222695564803453,
+          "feature_name": "lbSodimSbpL730",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.16016863702173315,
+          "feature_name": "lbSodimSbpL730",
+          "value": "2"
+        },
+        {
+          "coefficient": -0.12515491303381632,
+          "feature_name": "lbSodimSbpL730",
+          "value": "3"
+        },
+        {
+          "coefficient": -0.12344917283690982,
+          "feature_name": "mentptsd",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.2091478278055237,
+          "feature_name": "mentptsd",
+          "value": "1"
+        },
+        {
+          "coefficient": 0.21989580566004946,
+          "feature_name": "nsaid",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.08505239529071978,
+          "feature_name": "Prior1245",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.2681967844722317,
+          "feature_name": "Prior1245",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.23795377489564162,
+          "feature_name": "Prior1245",
+          "value": "2"
+        },
+        {
+          "coefficient": 0.03569584899839834,
+          "feature_name": "Prior1245",
+          "value": "4"
+        },
+        {
+          "coefficient": -0.6231317038721609,
+          "feature_name": "pulse",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.38048078381549544,
+          "feature_name": "pulse",
+          "value": "2"
+        },
+        {
+          "coefficient": -0.1418368172932178,
+          "feature_name": "resp",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.0805804862021008,
+          "feature_name": "resp",
+          "value": "2"
+        },
+        {
+          "coefficient": -0.4436664896872696,
+          "feature_name": "sex",
+          "value": "1"
+        },
+        {
+          "coefficient": 0.2540071756139976,
+          "feature_name": "syst",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.06358133697337809,
+          "feature_name": "syst",
+          "value": "2"
+        },
+        {
+          "coefficient": -0.12984733509751428,
+          "feature_name": "syst",
+          "value": "3"
+        },
+        {
+          "coefficient": 0.21328914021877987,
+          "feature_name": "tiuConsent365",
+          "value": "0"
+        },
+        {
+          "coefficient": 0.014395085165553323,
+          "feature_name": "tiuConsent365",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.06926461383922747,
+          "feature_name": "tiuConsent365",
+          "value": "2"
+        },
+        {
+          "coefficient": -0.19675493847912373,
+          "feature_name": "tiuTeleph730",
+          "value": "0"
+        },
+        {
+          "coefficient": -0.11961445814938668,
+          "feature_name": "tiuTeleph730",
+          "value": "1"
+        },
+        {
+          "coefficient": -0.06246268326328519,
+          "feature_name": "tiuTeleph730",
+          "value": "2"
+        },
+        {
+          "coefficient": -0.2429443613064096,
+          "feature_name": "WBCC",
+          "value": "0"
+        },
+        {
+          "coefficient": 1.0180812918827922,
+          "feature_name": "WBCC",
+          "value": "1"
+        },
+        {
+          "coefficient": 0.02920437603394846,
+          "feature_name": "WBCC",
+          "value": "2"
+        },
+        {
+          "coefficient": 0.19218189180658704,
+          "feature_name": "WBCC",
+          "value": "3"
+        }
+      ]
+    },
+    "kind": "coefficient_sum",
+    "name": "mort_log_odds",
+    "output_column": "mort_log_odds",
+    "parent_columns": [
+      "agegrp",
+      "BLACK",
+      "Albumin",
+      "AntiPsychotic",
+      "BB",
+      "BUN",
+      "BenZoDiZp",
+      "BetaAgn",
+      "HCC_HXCHF",
+      "HCC_METASCA",
+      "HCC_dementia",
+      "Prior1245",
+      "WBCC",
+      "covwtflag",
+      "cpt21to30fon730",
+      "cptOffVisEst90",
+      "deyo",
+      "diast",
+      "dxAlcohol730",
+      "dxChrAirObstNEC730",
+      "furosemide",
+      "hmgcoa",
+      "lbLymphoSBPL365",
+      "lbRBCSynFlL730",
+      "lbSodimSbpL730",
+      "mentptsd",
+      "nsaid",
+      "pulse",
+      "resp",
+      "sex",
+      "syst",
+      "tiuConsent365",
+      "tiuTeleph730"
+    ]
+  }
+}
