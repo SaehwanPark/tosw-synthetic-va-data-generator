@@ -192,6 +192,37 @@ def generate_pair(
   return t1, t2
 
 
+def write_pair_index(
+  output_dir: Path | str,
+  plans: list[PairPlan],
+) -> Path:
+  """Write the T1-to-T2 linkage as a manifest so pairing is explicit.
+
+  The pair grid stores one T1 file per replicate and one T2 file per
+  scenario-replicate. That saves tens of thousands of duplicate T1 copies, but
+  it means the pairing lives in this index rather than only in the directory
+  layout. An analysis script should read this file instead of guessing.
+  """
+  rows = [
+    {
+      "replicate_index": plan.replicate_index,
+      "label": plan.label,
+      "t1_scenario": plan.t1_scenario,
+      "t2_scenario": plan.t2_scenario,
+      "t1_path": f"{plan.t1_scenario}/{plan.label}/t1.parquet",
+      "t2_path": f"{plan.t2_scenario}/{plan.label}/t2.parquet",
+      "t1_seed": plan.t1_seed,
+      "t2_seed": plan.t2_seed,
+      "n_samples": plan.n_samples,
+    }
+    for plan in plans
+  ]
+  path = Path(output_dir) / "pair_index.csv"
+  path.parent.mkdir(parents=True, exist_ok=True)
+  pl.DataFrame(rows).write_csv(path)
+  return path
+
+
 def write_pair(
   directory: Path | str,
   plan: PairPlan,

@@ -10,11 +10,11 @@ import polars as pl
 from tabdat_synth import load_fitted_synthesizer
 
 from tosw_synth.generate import (
+  PairPlan,
   apply_scenario,
   build_pair_plan,
-  generate_pair,
   subsample,
-  write_pair,
+  write_pair_index,
   write_parquet,
 )
 from tosw_synth.scenario import Scenario, load_manifest
@@ -126,7 +126,7 @@ def build_parser() -> argparse.ArgumentParser:
 
   suite = subparsers.add_parser(
     "suite",
-    help="generate every dataset the paper needs in one run",
+    help="generate every dataset a monitoring study needs in one run",
   )
   suite.add_argument(
     "--output-dir",
@@ -291,29 +291,63 @@ def _run_pairs(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int
   output_root = args.output_dir or Path("data") / "pairs"
 
   fitted = load_fitted_synthesizer(args.bundle)
+  baseline_dir = output_root / "synth_t1_ageshift"
   total_written = 0
   total_skipped = 0
+  baseline_written = 0
+
+  # T1 is a pure function of the replicate index, so write it once per
+  # replicate and let every drift scenario reuse it.
+  baseline_scenario = manifest.require("synth_t1_ageshift")
+  for offset in range(args.replicates):
+    replicate_index = args.replicate_start + offset
+    target = baseline_dir / f"replicate_r{replicate_index:04d}" / "t1.parquet"
+    if args.skip_existing and target.exists():
+      total_skipped += 1
+      continue
+    frame = apply_scenario(
+      fitted,
+      baseline_scenario,
+      n_samples=n_samples,
+      seed=baseline_scenario.resolve_seed(replicate_index),
+    )
+    write_parquet(frame, target)
+    baseline_written += 1
+    total_written += 1
+    if baseline_written % 25 == 0:
+      print(
+        f"  synth_t1_ageshift: {baseline_written}/{args.replicates} "
+        f"t1 draw(s) written",
+        flush=True,
+      )
+  print(f"  synth_t1_ageshift: done ({baseline_written} t1 draw(s))", flush=True)
+
+  all_plans: list[PairPlan] = []
   for drift_name in drift_names:
     scenario_dir = output_root / drift_name
     scenario_written = 0
     for offset in range(args.replicates):
       replicate_index = args.replicate_start + offset
       plan = build_pair_plan(manifest, drift_name, replicate_index, n_samples)
-      pair_dir = scenario_dir / plan.label
+      target = scenario_dir / plan.label / "t2.parquet"
+      all_plans.append(plan)
 
-      if args.skip_existing and (pair_dir / "t1.parquet").exists() and (
-        pair_dir / "t2.parquet"
-      ).exists():
+      if args.skip_existing and target.exists():
         total_skipped += 1
         continue
 
-      t1, t2 = generate_pair(fitted, plan, manifest)
-      write_pair(pair_dir, plan, t1, t2)
+      frame = apply_scenario(
+        fitted,
+        manifest.require(drift_name),
+        n_samples=n_samples,
+        seed=plan.t2_seed,
+      )
+      write_parquet(frame, target)
       scenario_written += 1
       total_written += 1
       if scenario_written % 25 == 0:
         print(
-          f"  {drift_name}: {scenario_written}/{args.replicates} pair(s) written",
+          f"  {drift_name}: {scenario_written}/{args.replicates} t2 draw(s) written",
           flush=True,
         )
     print(
@@ -322,10 +356,12 @@ def _run_pairs(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int
       flush=True,
     )
 
+  index_path = write_pair_index(output_root, all_plans)
   print(
-    f"pairs: wrote {total_written} pair(s) under {output_root}, "
+    f"pairs: wrote {total_written} draw(s) under {output_root}, "
     f"skipped {total_skipped}"
   )
+  print(f"pair index: {index_path} ({len(all_plans)} row(s))")
   return 0
 
 

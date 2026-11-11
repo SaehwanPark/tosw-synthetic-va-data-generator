@@ -1,6 +1,7 @@
-"""One-command generation of every dataset the paper's simulations need.
+"""One-command generation of every dataset a monitoring study needs.
 
-The paper uses two kinds of dataset, and this module produces both:
+The semi-synthetic monitoring design uses two kinds of dataset, and this module
+produces both:
 
 ``drift``
   One 250,000-row table per drift scenario. These feed the calibration curves,
@@ -27,11 +28,11 @@ from tabdat_synth import FittedSynthesizer
 
 from tosw_synth.generate import (
   BASELINE_SCENARIO,
+  PairPlan,
   apply_scenario,
   build_pair_plan,
-  generate_pair,
   subsample,
-  write_pair,
+  write_pair_index,
   write_parquet,
 )
 from tosw_synth.scenario import ScenarioManifest
@@ -162,17 +163,50 @@ def _run_pairs(
   n_samples = options.n_samples or reference.n_samples
   pairs_root = options.output_dir / PAIRS_DIRNAME
 
+  # T1 depends only on the replicate index, not on which drift scenario it is
+  # paired with. Writing it once per replicate instead of once per pair saves
+  # tens of thousands of duplicate copies.
+  baseline_dir = pairs_root / BASELINE_SCENARIO
+  for replicate_index in range(options.replicates):
+    plan = build_pair_plan(
+      manifest, drift_names[0], replicate_index, n_samples
+    )
+    frame = apply_scenario(
+      fitted,
+      manifest.require(BASELINE_SCENARIO),
+      n_samples=n_samples,
+      seed=plan.t1_seed,
+    )
+    write_parquet(frame, baseline_dir / plan.label / "t1.parquet")
+    if (replicate_index + 1) % 25 == 0:
+      print(
+        f"  {BASELINE_SCENARIO}: {replicate_index + 1}/{options.replicates} "
+        f"baseline draw(s) written",
+        flush=True,
+      )
+  print(f"  {BASELINE_SCENARIO}: done ({options.replicates} draw(s))", flush=True)
+
+  all_plans: list[PairPlan] = []
   for drift_name in drift_names:
     scenario_dir = pairs_root / drift_name
     written = 0
     for replicate_index in range(options.replicates):
       plan = build_pair_plan(manifest, drift_name, replicate_index, n_samples)
-      t1, t2 = generate_pair(fitted, plan, manifest)
-      write_pair(scenario_dir / plan.label, plan, t1, t2)
+      frame = apply_scenario(
+        fitted,
+        manifest.require(drift_name),
+        n_samples=n_samples,
+        seed=plan.t2_seed,
+      )
+      write_parquet(frame, scenario_dir / plan.label / "t2.parquet")
+      all_plans.append(plan)
       written += 1
       if written % 25 == 0:
         print(
-          f"  {drift_name}: {written}/{options.replicates} pair(s) written",
+          f"  {drift_name}: {written}/{options.replicates} t2 draw(s) written",
           flush=True,
         )
-    print(f"  {drift_name}: done ({written} pair(s))", flush=True)
+    print(f"  {drift_name}: done ({written} t2 draw(s))", flush=True)
+
+  index_path = write_pair_index(pairs_root, all_plans)
+  print(f"  wrote {index_path} ({len(all_plans)} row(s))", flush=True)

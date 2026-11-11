@@ -209,7 +209,8 @@ It writes three groups of files:
 | --- | --- | --- |
 | `data/drift/<scenario>.parquet` | 39 tables, 250,000 rows each | Calibration curves, threshold selection, minimum breaking drift |
 | `data/reduced/<scenario>_n100000.parquet` | 39 tables, 100,000 rows drawn without replacement | Reduced-sample analysis |
-| `data/pairs/<scenario>/replicate_rXXXX/{t1,t2}.parquet` | 38 drift scenarios x 1,000 replicate pairs, 250,000 rows per time point | Repeated-sampling rates |
+| `data/pairs/<scenario>/replicate_rXXXX/` | 38 drift scenarios x 1,000 replicates, 250,000 rows per time point | Repeated-sampling rates |
+| `data/pairs/pair_index.csv` | The T1-to-T2 linkage for every replicate | Tells your analysis which two files form a pair |
 
 Print the plan without generating anything:
 
@@ -220,20 +221,49 @@ uv run python -m tosw_synth suite --dry-run
 Run a subset while developing:
 
 ```bash
-uv run python -m tosw_synth suite --replicates 5 --skip-reduced
+uv run python -m tosw_synth suite --replicates 5 --n-samples 1000 --skip-reduced
 ```
 
-A full run writes about 76,000 files and needs roughly 200 GB of free disk.
-Start with `--replicates 5 --skip-reduced` to confirm the workflow, then scale up.
+A full run writes 40,078 parquet files plus the index and needs roughly **171 GiB**
+of free disk. Each 250,000-row table is about 4.5 MiB. The pair grid dominates:
+1,000 baseline draws under `pairs/synth_t1_ageshift/` plus 38,000 drift draws.
+
+There is no separate T1 copy inside each drift scenario's folder. A baseline
+draw depends only on the replicate index, so it is stored once and every drift
+scenario in that replicate reuses it. `pair_index.csv` records which T1 file
+belongs with which T2 file.
+
+Start small and confirm the workflow before committing to a full run:
+
+```bash
+uv run python -m tosw_synth suite --replicates 5 --n-samples 1000 --output-dir data_trial
+```
+
+Then scale up once the output looks right. A full 1,000-replicate run at
+250,000 rows takes several hours on a laptop, at roughly a minute per table.
 
 ### Why the repeated pairs are written as pairs
 
 A replicate is a **pair**, not two unrelated tables. In replicate `r`, `t1` is
 the baseline draw at `r` and `t2` is the drift scenario at `r`. Both time points
 are independent draws, and every drift magnitude in that replicate is compared
-against the same baseline draw. Writing them into one directory keeps that
-linkage explicit, so an analysis script cannot accidentally pair `t1` from one
-replicate with `t2` from another.
+against the same baseline draw.
+
+Read `pair_index.csv` rather than reconstructing the linkage from filenames:
+
+```python
+import polars as pl
+
+root = "data/pairs"
+index = pl.read_csv(f"{root}/pair_index.csv")
+
+row = index.filter(
+  (pl.col("t2_scenario") == "synth_t2_intercept-50") & (pl.col("replicate_index") == 0)
+).row(0, named=True)
+
+t1 = pl.read_parquet(f"{root}/{row['t1_path']}")
+t2 = pl.read_parquet(f"{root}/{row['t2_path']}")
+```
 
 Generate pairs for selected drift scenarios only:
 

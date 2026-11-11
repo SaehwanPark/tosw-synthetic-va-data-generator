@@ -350,28 +350,50 @@ def test_suite_skips_pairs_and_reduced_on_request(manifest):
 def test_suite_writes_the_expected_tree(tmp_path, fitted, manifest):
   options = SuiteOptions(
     output_dir=tmp_path,
-    replicates=1,
+    replicates=2,
     n_samples=64,
   )
   run_suite(fitted, manifest, options)
 
   drift = sorted((tmp_path / "drift").glob("*.parquet"))
   reduced = sorted((tmp_path / "reduced").glob("*.parquet"))
-  pair_dirs = sorted((tmp_path / "pairs").glob("*/replicate_r0000"))
+  baseline_draws = sorted((tmp_path / "pairs" / "synth_t1_ageshift").glob("*/t1.parquet"))
 
   assert len(drift) == len(manifest.enabled())
   assert len(reduced) == len(manifest.enabled())
-  assert len(pair_dirs) == len(manifest.enabled()) - 1
+  # T1 is stored once per replicate, not once per drift scenario.
+  assert len(baseline_draws) == 2
 
-  first_pair = pair_dirs[0]
-  assert (first_pair / "t1.parquet").exists()
-  assert (first_pair / "t2.parquet").exists()
+  index_path = tmp_path / "pairs" / "pair_index.csv"
+  assert index_path.exists()
 
-  t1 = pl.read_parquet(first_pair / "t1.parquet")
-  t2 = pl.read_parquet(first_pair / "t2.parquet")
+  index = pl.read_csv(index_path)
+  assert index.height == (len(manifest.enabled()) - 1) * 2
+  assert set(index["t1_scenario"].to_list()) == {"synth_t1_ageshift"}
+
+  row = index.filter(pl.col("t2_scenario") == "synth_t2_intercept-100").row(0, named=True)
+  t1 = pl.read_parquet(tmp_path / "pairs" / row["t1_path"])
+  t2 = pl.read_parquet(tmp_path / "pairs" / row["t2_path"])
   assert t1.height == 64
   assert t2.height == 64
   assert not t1.equals(t2)
+
+
+def test_pair_index_records_every_drift_scenario(tmp_path, fitted, manifest):
+  options = SuiteOptions(output_dir=tmp_path, replicates=1, n_samples=32)
+  run_suite(fitted, manifest, options)
+
+  index = pl.read_csv(tmp_path / "pairs" / "pair_index.csv")
+  drift_scenarios = {
+    scenario.name
+    for scenario in manifest.enabled()
+    if scenario.name != "synth_t1_ageshift"
+  }
+
+  assert set(index["t2_scenario"].to_list()) == drift_scenarios
+  assert index["t1_seed"].null_count() == 0
+  assert index["t2_seed"].null_count() == 0
+  assert (index["t1_seed"] != index["t2_seed"]).all()
 
 
 def test_suite_output_paths_are_stable(tmp_path):
