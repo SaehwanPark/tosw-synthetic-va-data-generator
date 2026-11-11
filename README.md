@@ -165,16 +165,11 @@ mortality. The baseline scenario has an age shift of `0`, `alpha = 0`, and
   flatten risk differences between patients; `synth_t2_slope80` uses
   `beta = 0.8`. `beta` must stay strictly positive.
 
-List every scenario in the manifest, including its parameters and seed:
+List every available scenario in the manifest, including its parameters and
+seed:
 
 ```bash
 uv run python -m tosw_synth scenarios
-```
-
-Add `--all` to include the retained but disabled historical records:
-
-```bash
-uv run python -m tosw_synth scenarios --all
 ```
 
 ### The published scenario grid
@@ -284,7 +279,7 @@ the model specification changes; normal use never runs it.
 the new path.
 
 **`unknown scenario`.** The name must match the manifest exactly. Run
-`uv run python -m tosw_synth scenarios --all` to see every valid name.
+`uv run python -m tosw_synth scenarios` to see every scenario you can generate.
 
 **`fitted bundle package version mismatch`.** The bundle was written by a
 different `tabdat-synth` release. Run `uv sync` to install the pinned version.
