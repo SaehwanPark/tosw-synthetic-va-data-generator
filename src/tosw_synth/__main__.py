@@ -291,10 +291,11 @@ def _run_pairs(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int
   output_root = args.output_dir or Path("data") / "pairs"
 
   fitted = load_fitted_synthesizer(args.bundle)
-  written = 0
-  skipped = 0
+  total_written = 0
+  total_skipped = 0
   for drift_name in drift_names:
     scenario_dir = output_root / drift_name
+    scenario_written = 0
     for offset in range(args.replicates):
       replicate_index = args.replicate_start + offset
       plan = build_pair_plan(manifest, drift_name, replicate_index, n_samples)
@@ -303,17 +304,27 @@ def _run_pairs(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int
       if args.skip_existing and (pair_dir / "t1.parquet").exists() and (
         pair_dir / "t2.parquet"
       ).exists():
-        skipped += 1
+        total_skipped += 1
         continue
 
       t1, t2 = generate_pair(fitted, plan, manifest)
       write_pair(pair_dir, plan, t1, t2)
-      written += 1
-      if written % 25 == 0:
-        print(f"  {drift_name}: {written} pair(s) written", flush=True)
+      scenario_written += 1
+      total_written += 1
+      if scenario_written % 25 == 0:
+        print(
+          f"  {drift_name}: {scenario_written}/{args.replicates} pair(s) written",
+          flush=True,
+        )
+    print(
+      f"  {drift_name}: done ({scenario_written} written, "
+      f"{args.replicates - scenario_written} skipped)",
+      flush=True,
+    )
 
   print(
-    f"pairs: wrote {written} pair(s) under {output_root}, skipped {skipped}"
+    f"pairs: wrote {total_written} pair(s) under {output_root}, "
+    f"skipped {total_skipped}"
   )
   return 0
 
