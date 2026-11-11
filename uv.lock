@@ -549,7 +549,7 @@ wheels = [
 [[package]]
 name = "tabdat-synth"
 version = "0.2.0"
-source = { git = "https://github.com/SaehwanPark/tabdat-synth.git?rev=v0.2.0#3ebf2a48cd5d4c9f5988034d9e264a7cfd8e7186" }
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "lightgbm" },
     { name = "numpy" },
@@ -559,6 +559,10 @@ dependencies = [
     { name = "pyyaml" },
     { name = "scikit-learn" },
     { name = "scipy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a2/23/623e60ec5273fb53b4de41d9535c0a8bd53d4702454ca754e2eac8898e62/tabdat_synth-0.2.0.tar.gz", hash = "sha256:c14004c118e94b0c3cc6659bf4b4a40564d818fb9bab2b9b46bc8a616eaa2b01", size = 34528, upload-time = "2026-11-11T20:01:48.589Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f9/8d/ad5fe0dfc3998a274489647af1ad6171325a85f06a27f61c65bd2e48b1e7/tabdat_synth-0.2.0-py3-none-any.whl", hash = "sha256:49824a1e956403951e9041959751e947bcd5e157f5d8a2c33bc67bfdcb366ba4", size = 38486, upload-time = "2026-11-11T20:01:47.325Z" },
 ]
 
 [[package]]
@@ -596,7 +600,7 @@ requires-dist = [
     { name = "polars", specifier = ">=1.40.1" },
     { name = "pyarrow", specifier = ">=18.0.0" },
     { name = "python-dotenv", marker = "extra == 'fit'", specifier = ">=1.2.2" },
-    { name = "tabdat-synth", git = "https://github.com/SaehwanPark/tabdat-synth.git?rev=v0.2.0" },
+    { name = "tabdat-synth", specifier = "==0.2.0" },
 ]
 provides-extras = ["fit"]
 

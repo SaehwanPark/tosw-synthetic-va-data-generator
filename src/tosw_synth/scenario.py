@@ -5,11 +5,34 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
 import yaml
 
 DEFAULT_MANIFEST_PATH = (
   Path(__file__).resolve().parents[2] / "configs" / "scenarios.yaml"
 )
+
+# Stream identifier that separates replicate derivation from any other use of
+# SeedSequence in the generating library.
+_REPLICATE_STREAM = 7919
+
+
+def derive_replicate_seed(scenario_seed: int, replicate_index: int) -> int:
+  """Return a distinct, reproducible seed for one replicate of a scenario.
+
+  Adding ``replicate_index`` to a scenario base seed would overlap whenever two
+  scenarios sit fewer than 1,000 seeds apart, which is the case for the whole
+  published grid. Hashing the pair through ``SeedSequence`` keeps replicate 0
+  equal to the scenario seed, so published draws stay reproducible, while every
+  higher replicate maps to its own stream.
+  """
+  if replicate_index < 0:
+    raise ValueError("replicate_index must be zero or greater")
+  if replicate_index == 0:
+    return scenario_seed
+
+  sequence = np.random.SeedSequence([scenario_seed, _REPLICATE_STREAM, replicate_index])
+  return int(sequence.generate_state(1, dtype=np.uint32)[0])
 
 
 @dataclass(frozen=True)
@@ -32,9 +55,7 @@ class Scenario:
         f"scenario '{self.name}' has no seed and cannot be generated; "
         "it is recorded for reference only"
       )
-    if replicate_index < 0:
-      raise ValueError("replicate_index must be zero or greater")
-    return self.seed + replicate_index
+    return derive_replicate_seed(self.seed, replicate_index)
 
 
 @dataclass(frozen=True)

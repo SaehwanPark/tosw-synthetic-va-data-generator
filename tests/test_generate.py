@@ -13,8 +13,20 @@ import polars as pl
 import pytest
 from tabdat_synth import load_fitted_synthesizer
 
-from tosw_synth.generate import apply_scenario, subsample
+from tosw_synth.generate import (
+  apply_scenario,
+  build_pair_plan,
+  generate_pair,
+  subsample,
+)
 from tosw_synth.scenario import load_manifest
+from tosw_synth.suite import (
+  SuiteOptions,
+  build_suite_steps,
+  drift_output_path,
+  reduced_output_path,
+  run_suite,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BUNDLE_PATH = REPO_ROOT / "bundles" / "can2014"
@@ -238,9 +250,136 @@ def test_manifest_seeds_follow_the_published_formula(manifest):
 
 
 def test_replicate_index_shifts_the_seed(manifest):
+  from tosw_synth.scenario import derive_replicate_seed
+
   scenario = manifest.require("synth_t2_ageshift2")
-  assert scenario.resolve_seed(0) == 346
-  assert scenario.resolve_seed(7) == 353
+  assert scenario.resolve_seed(0) == scenario.seed
+  assert scenario.resolve_seed(7) == derive_replicate_seed(scenario.seed, 7)
+  assert scenario.resolve_seed(7) != scenario.seed + 7
+  assert scenario.resolve_seed(7) != scenario.resolve_seed(8)
+
+
+def test_replicate_zero_is_unchanged_from_the_published_draw(fitted, manifest):
+  """Replicate 0 must keep the exact stream the current release publishes."""
+  import hashlib
+
+  scenario = manifest.require("synth_t1_ageshift")
+  assert scenario.resolve_seed(0) == 343
+
+  frame = apply_scenario(fitted, scenario, n_samples=500, seed=scenario.resolve_seed(0))
+  digest = hashlib.sha256(frame.write_csv().encode()).hexdigest()
+
+  # Pinned from the released generator. If this changes, replicate 0 moved and
+  # every published table would need regenerating.
+  assert digest == (
+    "cd1472ea73007d391a6a02572dc5dba86e7e1b6154c23f68146d0bdd12f63eab"
+  )
+
+
+def test_all_scenario_replicate_streams_are_distinct(manifest):
+  seen: dict[int, tuple[str, int]] = {}
+  for scenario in manifest.enabled():
+    for replicate in range(1000):
+      seed = scenario.resolve_seed(replicate)
+      assert seed not in seen, (
+        f"seed {seed} shared by {scenario.name}[r={replicate}] "
+        f"and {seen[seed]}"
+      )
+      seen[seed] = (scenario.name, replicate)
+
+  assert len(seen) == len(manifest.enabled()) * 1000
+
+
+def test_first_time_point_is_independent_of_the_second(manifest):
+  baseline = manifest.require("synth_t1_ageshift")
+  drift = manifest.require("synth_t2_ageshift0")
+
+  # Before the fix, baseline[r+2] collided with drift[r].
+  assert baseline.resolve_seed(2) != drift.resolve_seed(0)
+  assert baseline.resolve_seed(4) != drift.resolve_seed(2)
+
+
+def test_replicate_pairs_generate_independent_frames(fitted, manifest):
+  plan = build_pair_plan(
+    manifest, "synth_t2_intercept-50", replicate_index=0, n_samples=500
+  )
+  t1, t2 = generate_pair(fitted, plan, manifest)
+  assert not t1.equals(t2)
+  assert t1.columns == t2.columns
+
+  other = build_pair_plan(
+    manifest, "synth_t2_intercept-50", replicate_index=1, n_samples=500
+  )
+  other_t1, other_t2 = generate_pair(fitted, other, manifest)
+  assert not t1.equals(other_t1)
+  assert not t2.equals(other_t2)
+
+
+def test_pair_plan_matches_manifest_seeds(manifest):
+  plan = build_pair_plan(
+    manifest, "synth_t2_slope82", replicate_index=5, n_samples=123
+  )
+
+  assert plan.t1_scenario == "synth_t1_ageshift"
+  assert plan.t2_scenario == "synth_t2_slope82"
+  assert plan.t1_seed == manifest.require("synth_t1_ageshift").resolve_seed(5)
+  assert plan.t2_seed == manifest.require("synth_t2_slope82").resolve_seed(5)
+  assert plan.n_samples == 123
+  assert plan.label == "replicate_r0005"
+
+
+def test_suite_dry_run_lists_the_three_dataset_kinds(manifest):
+  options = SuiteOptions(output_dir=Path("/tmp/suite_plan"))
+  steps = build_suite_steps(manifest, options)
+  labels = [label for label, _ in steps]
+
+  assert labels == ["drift", "reduced", "pairs"]
+
+
+def test_suite_skips_pairs_and_reduced_on_request(manifest):
+  options = SuiteOptions(
+    output_dir=Path("/tmp/suite_plan"),
+    include_reduced=False,
+    include_pairs=False,
+  )
+  labels = [label for label, _ in build_suite_steps(manifest, options)]
+
+  assert labels == ["drift"]
+
+
+def test_suite_writes_the_expected_tree(tmp_path, fitted, manifest):
+  options = SuiteOptions(
+    output_dir=tmp_path,
+    replicates=1,
+    n_samples=64,
+  )
+  run_suite(fitted, manifest, options)
+
+  drift = sorted((tmp_path / "drift").glob("*.parquet"))
+  reduced = sorted((tmp_path / "reduced").glob("*.parquet"))
+  pair_dirs = sorted((tmp_path / "pairs").glob("*/replicate_r0000"))
+
+  assert len(drift) == len(manifest.enabled())
+  assert len(reduced) == len(manifest.enabled())
+  assert len(pair_dirs) == len(manifest.enabled()) - 1
+
+  first_pair = pair_dirs[0]
+  assert (first_pair / "t1.parquet").exists()
+  assert (first_pair / "t2.parquet").exists()
+
+  t1 = pl.read_parquet(first_pair / "t1.parquet")
+  t2 = pl.read_parquet(first_pair / "t2.parquet")
+  assert t1.height == 64
+  assert t2.height == 64
+  assert not t1.equals(t2)
+
+
+def test_suite_output_paths_are_stable(tmp_path):
+  path = drift_output_path(tmp_path, "synth_t2_slope82")
+  reduced = reduced_output_path(tmp_path, "synth_t2_slope82")
+
+  assert path == tmp_path / "drift" / "synth_t2_slope82.parquet"
+  assert reduced == tmp_path / "reduced" / "synth_t2_slope82_n100000.parquet"
 
 
 def test_disabled_scenario_without_seed_cannot_be_generated(manifest):

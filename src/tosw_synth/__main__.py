@@ -9,8 +9,16 @@ from pathlib import Path
 import polars as pl
 from tabdat_synth import load_fitted_synthesizer
 
-from tosw_synth.generate import apply_scenario, subsample, write_parquet
+from tosw_synth.generate import (
+  apply_scenario,
+  build_pair_plan,
+  generate_pair,
+  subsample,
+  write_pair,
+  write_parquet,
+)
 from tosw_synth.scenario import Scenario, load_manifest
+from tosw_synth.suite import SuiteOptions, build_suite_steps, run_suite
 
 DEFAULT_BUNDLE = Path(__file__).resolve().parents[2] / "bundles" / "can2014"
 DEFAULT_OUTPUT_DIR = Path("data")
@@ -58,7 +66,7 @@ def build_parser() -> argparse.ArgumentParser:
     "--replicate-index",
     type=int,
     default=0,
-    help="replicate index added to the scenario seed (default: 0)",
+    help="replicate index selecting the random stream (default: 0)",
   )
   generate.add_argument(
     "--output",
@@ -71,6 +79,90 @@ def build_parser() -> argparse.ArgumentParser:
     type=Path,
     default=DEFAULT_OUTPUT_DIR,
     help="directory for --enabled output (default: data/)",
+  )
+
+  pairs = subparsers.add_parser(
+    "pairs",
+    help="generate repeated T1-T2 sample pairs for the drift grid",
+  )
+  pairs.add_argument(
+    "--replicates",
+    type=int,
+    default=1000,
+    help="number of replicate pairs per drift scenario (default: 1000)",
+  )
+  pairs.add_argument(
+    "--drift",
+    action="append",
+    default=None,
+    help=(
+      "drift scenario to pair against T1; repeatable "
+      "(default: every enabled non-baseline scenario)"
+    ),
+  )
+  pairs.add_argument(
+    "--n-samples",
+    type=int,
+    default=None,
+    help="rows per time point (default: the manifest value)",
+  )
+  pairs.add_argument(
+    "--output-dir",
+    type=Path,
+    default=None,
+    help="root directory for pair output (default: data/pairs)",
+  )
+  pairs.add_argument(
+    "--replicate-start",
+    type=int,
+    default=0,
+    help="first replicate index to generate (default: 0)",
+  )
+  pairs.add_argument(
+    "--skip-existing",
+    action="store_true",
+    help="skip pairs whose two files already exist",
+  )
+
+  suite = subparsers.add_parser(
+    "suite",
+    help="generate every dataset the paper needs in one run",
+  )
+  suite.add_argument(
+    "--output-dir",
+    type=Path,
+    default=DEFAULT_OUTPUT_DIR,
+    help="root output directory (default: data/)",
+  )
+  suite.add_argument(
+    "--replicates",
+    type=int,
+    default=1000,
+    help="replicate pairs per drift scenario (default: 1000)",
+  )
+  suite.add_argument(
+    "--n-samples",
+    type=int,
+    default=None,
+    help=(
+      "override rows per table for a quick trial (default: the manifest "
+      "row count)"
+    ),
+  )
+  suite.add_argument(
+    "--skip-reduced",
+    action="store_true",
+    help="skip the reduced-sample 100,000-row copies",
+  )
+  suite.add_argument(
+    "--skip-pairs",
+    action="store_true",
+    help="skip the repeated pair grid",
+  )
+  suite.add_argument(
+    "--dry-run",
+    action="store_true",
+    help="print the plan without generating anything",
   )
 
   sample = subparsers.add_parser(
@@ -106,6 +198,10 @@ def main(argv: list[str] | None = None) -> int:
     return _run_subsample(args)
   if args.command == "generate":
     return _run_generate(args, parser)
+  if args.command == "pairs":
+    return _run_pairs(args, parser)
+  if args.command == "suite":
+    return _run_suite(args, parser)
 
   parser.error(f"unknown command '{args.command}'")
   return 2
@@ -114,7 +210,10 @@ def main(argv: list[str] | None = None) -> int:
 def _run_scenarios(args: argparse.Namespace) -> int:
   manifest = load_manifest(args.manifest)
   scenarios = manifest.scenarios if args.all else manifest.enabled()
-  print(f"{'scenario':28s} {'enabled':7s} {'shift':>6s} {'alpha':>7s} {'beta':>6s} {'seed':>6s}")
+  print(
+    f"{'scenario':28s} {'enabled':7s} {'shift':>6s} "
+    f"{'alpha':>7s} {'beta':>6s} {'seed':>6s}"
+  )
   for scenario in scenarios:
     seed = "-" if scenario.seed is None else str(scenario.seed)
     print(
@@ -169,6 +268,80 @@ def _run_generate(args: argparse.Namespace, parser: argparse.ArgumentParser) -> 
   path = write_parquet(frame, output)
   print(f"wrote {path} ({frame.height:,} rows x {len(frame.columns)} columns)")
   _print_summary(frame, scenario, seed)
+  return 0
+
+
+def _run_pairs(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int:
+  manifest = load_manifest(args.manifest)
+  if args.replicates <= 0:
+    parser.error("--replicates must be positive")
+  if args.replicate_start < 0:
+    parser.error("--replicate-start must be zero or greater")
+  if args.n_samples is not None and args.n_samples <= 0:
+    parser.error("--n-samples must be positive")
+
+  drift_names = args.drift or [
+    scenario.name for scenario in manifest.enabled() if scenario.name != "synth_t1_ageshift"
+  ]
+  if not drift_names:
+    parser.error("no drift scenarios selected")
+
+  reference = manifest.require(drift_names[0])
+  n_samples = args.n_samples or reference.n_samples
+  output_root = args.output_dir or Path("data") / "pairs"
+
+  fitted = load_fitted_synthesizer(args.bundle)
+  written = 0
+  skipped = 0
+  for drift_name in drift_names:
+    scenario_dir = output_root / drift_name
+    for offset in range(args.replicates):
+      replicate_index = args.replicate_start + offset
+      plan = build_pair_plan(manifest, drift_name, replicate_index, n_samples)
+      pair_dir = scenario_dir / plan.label
+
+      if args.skip_existing and (pair_dir / "t1.parquet").exists() and (
+        pair_dir / "t2.parquet"
+      ).exists():
+        skipped += 1
+        continue
+
+      t1, t2 = generate_pair(fitted, plan, manifest)
+      write_pair(pair_dir, plan, t1, t2)
+      written += 1
+      if written % 25 == 0:
+        print(f"  {drift_name}: {written} pair(s) written", flush=True)
+
+  print(
+    f"pairs: wrote {written} pair(s) under {output_root}, skipped {skipped}"
+  )
+  return 0
+
+
+def _run_suite(args: argparse.Namespace, parser: argparse.ArgumentParser) -> int:
+  if args.replicates <= 0:
+    parser.error("--replicates must be positive")
+  if args.n_samples is not None and args.n_samples <= 0:
+    parser.error("--n-samples must be positive")
+
+  manifest = load_manifest(args.manifest)
+  options = SuiteOptions(
+    output_dir=args.output_dir,
+    replicates=args.replicates,
+    include_reduced=not args.skip_reduced,
+    include_pairs=not args.skip_pairs,
+    n_samples=args.n_samples,
+  )
+  steps = build_suite_steps(manifest, options)
+
+  if args.dry_run:
+    print(f"suite plan for {args.output_dir} ({len(steps)} step(s)):")
+    for label, description in steps:
+      print(f"  [{label}] {description}")
+    return 0
+
+  fitted = load_fitted_synthesizer(args.bundle)
+  run_suite(fitted, manifest, options, steps)
   return 0
 
 
