@@ -194,6 +194,93 @@ This writes one parquet file per enabled scenario, named after the scenario.
 Expect roughly 40 minutes on a laptop for all 39 files at 250,000 rows each,
 or about a minute per 250,000-row file.
 
+## Generating every dataset for a study in one command
+
+Most simulation studies need more than the drift grid: they also need repeated
+sample pairs and a reduced-sample draw. The `suite` command builds all of it:
+
+```bash
+uv run python -m tosw_synth suite --output-dir data/
+```
+
+It writes three groups of files:
+
+| Output | Contents | Used for |
+| --- | --- | --- |
+| `data/drift/<scenario>.parquet` | 39 tables, 250,000 rows each | Calibration curves, threshold selection, minimum breaking drift |
+| `data/reduced/<scenario>_n100000.parquet` | 39 tables, 100,000 rows drawn without replacement | Reduced-sample analysis |
+| `data/pairs/<scenario>/replicate_rXXXX/` | 38 drift scenarios x 1,000 replicates, 250,000 rows per time point | Repeated-sampling rates |
+| `data/pairs/pair_index.csv` | The T1-to-T2 linkage for every replicate | Tells your analysis which two files form a pair |
+
+Print the plan without generating anything:
+
+```bash
+uv run python -m tosw_synth suite --dry-run
+```
+
+Run a subset while developing:
+
+```bash
+uv run python -m tosw_synth suite --replicates 5 --n-samples 1000 --skip-reduced
+```
+
+A full run writes 40,078 parquet files plus the index and needs roughly **171 GiB**
+of free disk. Each 250,000-row table is about 4.5 MiB. The pair grid dominates:
+1,000 baseline draws under `pairs/synth_t1_ageshift/` plus 38,000 drift draws.
+
+There is no separate T1 copy inside each drift scenario's folder. A baseline
+draw depends only on the replicate index, so it is stored once and every drift
+scenario in that replicate reuses it. `pair_index.csv` records which T1 file
+belongs with which T2 file.
+
+Start small and confirm the workflow before committing to a full run:
+
+```bash
+uv run python -m tosw_synth suite --replicates 5 --n-samples 1000 --output-dir data_trial
+```
+
+Then scale up once the output looks right. A full 1,000-replicate run at
+250,000 rows takes several hours on a laptop, at roughly a minute per table.
+
+### Why the repeated pairs are written as pairs
+
+A replicate is a **pair**, not two unrelated tables. In replicate `r`, `t1` is
+the baseline draw at `r` and `t2` is the drift scenario at `r`. Both time points
+are independent draws, and every drift magnitude in that replicate is compared
+against the same baseline draw.
+
+Read `pair_index.csv` rather than reconstructing the linkage from filenames:
+
+```python
+import polars as pl
+
+root = "data/pairs"
+index = pl.read_csv(f"{root}/pair_index.csv")
+
+row = index.filter(
+  (pl.col("t2_scenario") == "synth_t2_intercept-50") & (pl.col("replicate_index") == 0)
+).row(0, named=True)
+
+t1 = pl.read_parquet(f"{root}/{row['t1_path']}")
+t2 = pl.read_parquet(f"{root}/{row['t2_path']}")
+```
+
+Generate pairs for selected drift scenarios only:
+
+```bash
+uv run python -m tosw_synth pairs \
+  --drift synth_t2_intercept-50 \
+  --drift synth_t2_slope82 \
+  --replicates 1000 \
+  --output-dir data/pairs
+```
+
+Resume an interrupted run without overwriting finished pairs:
+
+```bash
+uv run python -m tosw_synth pairs --replicates 1000 --skip-existing
+```
+
 ## Reproducibility: `--n-samples` and `--replicate-index`
 
 **`--n-samples`** sets the row count for that run. Omit it to use the manifest
@@ -206,11 +293,11 @@ uv run python -m tosw_synth generate \
   --output data/quick_test.parquet
 ```
 
-**`--replicate-index`** selects which repeat draw to produce. A scenario's seed
-is `scenario_seed + replicate_index`, so index `0` is the published draw and
-index `1` is an independent draw with the same parameters. The default is `0`.
-This is how you build repeated samples for simulation studies without changing
-the scenario definition:
+**`--replicate-index`** selects which repeat draw to produce. Index `0` is the
+published draw and returns the scenario's base seed unchanged. Higher indexes
+map to their own independent random stream. The default is `0`. This is how you
+build repeated samples for simulation studies without changing the scenario
+definition:
 
 ```bash
 uv run python -m tosw_synth generate \
@@ -219,6 +306,10 @@ uv run python -m tosw_synth generate \
   --replicate-index 17 \
   --output data/synth_t1_ageshift_r17.parquet
 ```
+
+Replicate indexes are independent across scenarios. Two different scenarios
+never share a stream at any index, so a repeated-sample analysis really does
+compare independent draws.
 
 The same scenario, row count, and replicate index always reproduce the same
 frame on the same pinned environment. Pin `uv.lock` and the `tabdat-synth`
@@ -257,21 +348,57 @@ workflow prototyping rather than as a public-release mechanism for sensitive
 data. Do not present generated data as a de-identified copy of real patients,
 and do not use it to make claims about real individuals.
 
-## Author-only: rebuilding the bundle
+## Rebuilding or refitting the bundle with VA data access
 
-Refitting requires the original 2014 VA CAN extract, which is not distributed.
-If you have authorized access to it, point `VA_DIR` at its directory:
+The bundle shipped here is ready to use, and most users never need this section.
+It matters if you hold authorized access to the VA CAN extract and want to
+rebuild the bundle against your own extract, re-run the fit for a different
+cohort year, or change the model specification.
+
+### What you need
+
+Authorized access to the source extract, specifically
+`all_can_2014_v2_ordinalver.parquet`, plus the approvals your data use
+agreement requires. The extract is never distributed with this repository.
+
+### Point the fitter at your extract
+
+Set `VA_DIR` to the directory holding the extract, then rebuild:
 
 ```bash
 export VA_DIR=/path/to/can/extract
 uv run --extra fit python -c "from tosw_synth.fit import rebuild; print(rebuild())"
 ```
 
-A rebuild reads `all_can_2014_v2_ordinalver.parquet` from that directory, draws
-the historical 50 percent fitting sample with seed `343`, fits 32 covariate
-models plus the age summary, and rewrites `bundles/can2014/`. It takes about 10
-minutes and roughly 4 GB of memory. Rebuilding is only needed if the cohort or
-the model specification changes; normal use never runs it.
+The rebuild:
+
+1. reads `all_can_2014_v2_ordinalver.parquet` from `VA_DIR`
+2. drops `patienticn`, `yr`, `Death1y`, and `intercept`
+3. draws the 50 percent fitting sample with seed `343`
+4. fits 32 covariate classifiers, the age summary, and the two outcome
+   coefficient sets
+5. rewrites `bundles/can2014/` and records the fit in `FIT_INFO.txt`
+
+Expect about 10 minutes and roughly 4 GB of memory.
+
+### Refitting for a different cohort or specification
+
+The fit is driven by `src/tosw_synth/fit.py`. To fit a different cohort year,
+change `SOURCE_FILENAME`. To change the model, edit `build_spec`. To change the
+covariate order, edit the order the manifest and `covariate_columns` produce.
+
+After any refit, regenerate your data: the bundle now carries different fitted
+parameters, so previously generated files no longer correspond to it.
+
+### Keeping a rebuild private
+
+A rebuilt bundle still contains fitted parameters rather than patient rows, but
+those parameters come from your extract. Publish it only if your data use
+agreement permits it, and rerun the leak check before sharing:
+
+```bash
+grep -rlE "/Volumes/|/Users/|patienticn" bundles/can2014/ || echo "no private paths found"
+```
 ## Troubleshooting
 
 **`uv: command not found`.** Install `uv` with the command in
@@ -293,8 +420,78 @@ scenario at a time instead of using `--enabled`.
 
 ## Citation
 
-If you use this generator, cite the repository and the `tabdat-synth` release it
-pins. See `pyproject.toml` for the exact version.
+This generator is built on **`tabdat-synth`**, the spec-driven synthesis engine
+that fits and applies the bundle. If you use this generator, please cite both
+the generator and `tabdat-synth`.
+
+The generator pins `tabdat-synth==0.2.0`. See `pyproject.toml` and `uv.lock` for
+the exact resolved release.
+
+### Bibliography
+
+Park S. *tosw-synthetic-va-data-generator: semi-synthetic VA Care Assessment
+Needs dataset generator* (version 0.1.0) [computer software]. GitHub.
+https://github.com/SaehwanPark/tosw-synthetic-va-data-generator
+
+Park S. *tabdat-synth: spec-driven synthetic tabular data generation with
+reusable fitted bundles* (version 0.2.0) [computer software]. GitHub and PyPI.
+https://github.com/SaehwanPark/tabdat-synth and
+https://pypi.org/project/tabdat-synth/0.2.0/
+
+Ke G, Meng Q, Finley T, Wang T, Chen W, Ma W, Ye Q, Liu TY. LightGBM: a highly
+efficient gradient boosting decision tree. In: *Advances in Neural Information
+Processing Systems 30*; 2017:3146-3154.
+
+Wang L, Porter B, Maynard C, Evans G, Bryson C, Sun H, Gupta I, Lowy E,
+McDonell MB, Frisbee K, Nielson C, Kirkland K, Fihn SD. Predicting risk of
+hospitalization or death among patients receiving primary care in the Veterans
+Health Administration. *Medical Care*. 2013;51(4):368-373.
+doi:10.1097/MLR.0b013e31827da95a
+
+### BibTeX
+
+```bibtex
+@software{tosw_synthetic_va_data_generator,
+  author  = {Park, Sae-Hwan},
+  title   = {tosw-synthetic-va-data-generator: semi-synthetic VA Care
+             Assessment Needs dataset generator},
+  version = {0.1.0},
+  url     = {https://github.com/SaehwanPark/tosw-synthetic-va-data-generator}
+}
+
+@software{tabdat_synth,
+  author  = {Park, Sae-Hwan},
+  title   = {tabdat-synth: spec-driven synthetic tabular data generation
+             with reusable fitted bundles},
+  version = {0.2.0},
+  url     = {https://github.com/SaehwanPark/tabdat-synth},
+  note    = {PyPI: https://pypi.org/project/tabdat-synth/0.2.0/}
+}
+
+@inproceedings{ke2017lightgbm,
+  author    = {Ke, Guolin and Meng, Qi and Finley, Thomas and Wang, Taifeng
+               and Chen, Wei and Ma, Weidong and Ye, Qiwei and Liu, Tie-Yan},
+  title     = {{LightGBM}: A Highly Efficient Gradient Boosting Decision Tree},
+  booktitle = {Advances in Neural Information Processing Systems 30},
+  pages     = {3146--3154},
+  year      = {2017}
+}
+
+@article{wang2013predicting,
+  author  = {Wang, Li and Porter, Brian and Maynard, Charles and Evans, Greg
+             and Bryson, Chris and Sun, Haili and Gupta, Indra and Lowy, Elliott
+             and McDonell, Michael B. and Frisbee, Kathleen and Nielson, Chris
+             and Kirkland, Kimberly and Fihn, Stephan D.},
+  title   = {Predicting Risk of Hospitalization or Death Among Patients
+             Receiving Primary Care in the Veterans Health Administration},
+  journal = {Medical Care},
+  volume  = {51},
+  number  = {4},
+  pages   = {368--373},
+  year    = {2013},
+  doi     = {10.1097/MLR.0b013e31827da95a}
+}
+```
 
 ## License
 
