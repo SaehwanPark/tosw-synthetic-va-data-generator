@@ -17,23 +17,30 @@ You need [uv](https://docs.astral.sh/uv/). Install it once:
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-Then clone and generate every dataset a simulation study needs:
+Then clone and set up:
 
 ```bash
 git clone https://github.com/SaehwanPark/tosw-synthetic-va-data-generator.git
 cd tosw-synthetic-va-data-generator
 uv sync
-uv run python -m tosw_synth suite --output-dir data/
 ```
 
-That is the whole workflow. `data/` is git-ignored, so generated files stay local.
-
-A full run is large (39,079 files, roughly 172 GiB, several hours). To confirm
-things work first:
+Confirm the installation works with a small trial run, which takes under a minute:
 
 ```bash
 uv run python -m tosw_synth suite --replicates 2 --n-samples 500 --output-dir data_trial
 ```
+
+Then run the full grid:
+
+```bash
+uv run python -m tosw_synth suite --output-dir data/
+```
+
+That produces every dataset a simulation study needs. It is a large job — 39,079
+files, roughly 172 GiB, several hours on a laptop — so run the trial first and make
+sure you have the disk space. `data/` is git-ignored, so generated files stay
+local.
 
 ## What you generate
 
