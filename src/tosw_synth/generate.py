@@ -111,7 +111,10 @@ def subsample(
     raise ValueError("n_samples must be positive")
   if n_samples > frame.height:
     raise ValueError(
-      f"cannot draw {n_samples} rows without replacement from {frame.height} rows"
+      f"cannot draw {n_samples:,} rows without replacement from a "
+      f"{frame.height:,}-row input. The input is smaller than the requested "
+      f"sample, so either lower --n-samples or generate a larger source table "
+      f"first."
     )
   return frame.sample(n=n_samples, with_replacement=False, seed=seed)
 

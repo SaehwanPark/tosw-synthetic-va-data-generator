@@ -1,454 +1,158 @@
-# Synthetic VA CAN Dataset Generator
+# Semi-Synthetic VA CAN Dataset Generator
 
-This repository generates semi-synthetic **Veterans Affairs Care Assessment
-Needs (CAN) cohort** data. You can produce a complete analysis-ready dataset
-with the same structure as the original 2014 CAN extract, at whatever sample
-size you need, on your own machine, without access to the original data.
+Generate semi-synthetic **Veterans Affairs Care Assessment Needs (CAN)** datasets
+from a fitted bundle. No access to the original VA data is required.
 
-The generator ships with a **fitted bundle**: a small set of learned
-parameters captured once from a 2014 VA CAN cohort. Generating data only reads
-that bundle. It never reads the original extract, so you do not need a data use
-agreement, a private path, or a network connection to produce data.
+**This repository distributes no VA data.** It contains no source extract, no
+patient records, no patient identifiers, and no protected health information.
+Nothing here falls under HIPAA or VA data use agreement restrictions on
+redistribution. What is distributed instead is described under
+[what is distributed](#what-is-distributed).
 
----
+## Quick start
 
-## What you get
-
-Each generated table contains one row per synthetic patient and the following
-columns:
-
-| Column | Meaning |
-| --- | --- |
-| `age_cont` | Age in completed years, as an integer |
-| `agegrp` | Age group: `1` through `5`, cut at 54, 64, 74, and 84 years |
-| 32 clinical and utilization covariates | The CAN risk-factor columns, e.g. `Albumin`, `BUN`, `Prior1245`, `deyo`, `HCC_HXCHF` |
-| `pHosp_1y` | One-year hospitalization risk, a probability between 0 and 1 |
-| `pMort_1y` | One-year mortality risk, a probability between 0 and 1 |
-| `Hosp_1y` | One-year hospitalization, `0` or `1` |
-| `Mort_1y` | One-year mortality, `0` or `1` |
-
-Values are coded exactly as in the original extract: categorical covariates use
-the same integer levels, with `99` meaning "not recorded". Two internal
-log-odds columns used while generating the outcomes are dropped before the file
-is written.
-
-## How the data are produced
-
-Generation happens in three stages.
-
-1. **Age.** An age is drawn from a truncated normal distribution fitted to the
-   cohort, clipped to the observed age range and rounded to whole years. Scenarios
-   can shift the mean age. `agegrp` is then derived from `age_cont` with the
-   cohort cut points.
-2. **Covariates.** The remaining covariates are drawn one at a time. Each has a
-   trained gradient-boosting model that predicts it from `agegrp` and the
-   covariates drawn before it. This keeps the joint distribution realistic
-   instead of making every column independent.
-3. **Outcomes.** A fixed risk model combines the drawn covariates into
-   hospitalization and mortality log-odds. A scenario can rescale those
-   log-odds (`alpha`, `beta`) to simulate a sicker or healthier population. Each
-   probability column is the logistic transform of its log-odds, and each binary
-   outcome is drawn once from that probability. Hospitalization and mortality
-   therefore come from the same synthetic patient, as they would in a real cohort.
-
-## What you need
-
-- A Mac, Linux, or Windows machine.
-- [uv](https://docs.astral.sh/uv/), the Python package manager. Install it once:
+You need [uv](https://docs.astral.sh/uv/). Install it once:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-  On Windows, use the PowerShell installer from the same page instead. You do
-  **not** need to install Python yourself; `uv` fetches the right version.
-
-## Step 1: get the repository and set up
+Then clone and generate every dataset a simulation study needs:
 
 ```bash
 git clone https://github.com/SaehwanPark/tosw-synthetic-va-data-generator.git
 cd tosw-synthetic-va-data-generator
 uv sync
-```
-
-`uv sync` creates a local environment and installs everything the generator
-needs, including a pinned release of the `tabdat-synth` library.
-
-## Step 2: generate a dataset
-
-Generate one scenario at the published size of 250,000 rows:
-
-```bash
-uv run python -m tosw_synth generate \
-  --scenario synth_t1_ageshift \
-  --n-samples 250000 \
-  --replicate-index 0 \
-  --output data/synth_t1_ageshift.parquet
-```
-
-This writes `data/synth_t1_ageshift.parquet`. That directory is ignored by git,
-so your generated data stays local.
-
-A real run prints a short summary:
-
-```text
-wrote data/synth_t1_ageshift.parquet (250,000 rows x 38 columns)
-  scenario: synth_t1_ageshift
-  age shift: +0.0 years
-  outcome alpha: +0.00, beta: 1.00
-  seed: 343
-  mean age: 62.71
-  hospitalization rate: 0.0864
-  mortality rate: 0.0308
-```
-
-## Step 3: open the data
-
-The file is [Parquet](https://parquet.apache.org/), a compact columnar format
-that Python, R, Stata 18+, and DuckDB all read directly. It is faster and
-smaller than CSV and keeps column types intact.
-
-**Python**
-
-```python
-import polars as pl
-
-df = pl.read_parquet("data/synth_t1_ageshift.parquet")
-print(df.shape)
-print(df.select(["age_cont", "Hosp_1y", "Mort_1y"]).describe())
-```
-
-**R**
-
-```r
-library(arrow)
-df <- read_parquet("data/synth_t1_ageshift.parquet")
-summary(df$age_cont)
-```
-
-**Stata** (18 or newer reads Parquet natively)
-
-```stata
-import parquet using "data/synth_t1_ageshift.parquet", clear
-```
-
-Stata versions before 18 cannot read Parquet. Convert to CSV or `.dta` first, as
-shown below.
-
-If your tool cannot read Parquet, convert once with Python or DuckDB:
-
-```python
-import polars as pl
-
-pl.read_parquet("data/synth_t1_ageshift.parquet").write_csv(
-  "data/synth_t1_ageshift.csv"
-)
-```
-
-```bash
-duckdb -c "COPY (SELECT * FROM 'data/synth_t1_ageshift.parquet') TO 'data/synth_t1_ageshift.csv' (HEADER)"
-```
-
-## Choosing a scenario
-
-A **scenario** sets one age shift, one outcome intercept `alpha`, and one
-outcome slope `beta`. The same `alpha` and `beta` apply to hospitalization and
-mortality. The baseline scenario has an age shift of `0`, `alpha = 0`, and
-`beta = 1`, which is the cohort as fitted.
-
-- **`age_shift`** adds years to the mean age before the age distribution is
-  truncated. `synth_t2_ageshift4` shifts the mean age up by 4 years.
-- **`alpha`** moves both outcome log-odds up or down by a fixed amount. Negative
-  values lower the outcome rates throughout the population.
-  `synth_t2_intercept-50` uses `alpha = -0.5`.
-- **`beta`** multiplies the spread of the outcome log-odds. Values below `1`
-  flatten risk differences between patients; `synth_t2_slope80` uses
-  `beta = 0.8`. `beta` must stay strictly positive.
-
-List every available scenario in the manifest, including its parameters and
-seed:
-
-```bash
-uv run python -m tosw_synth scenarios
-```
-
-### The published scenario grid
-
-| Family | Scenario names | Count |
-| --- | --- | --- |
-| Baseline | `synth_t1_ageshift` | 1 |
-| Age shift | `synth_t2_ageshift0`, `2`, `4`, `6`, `8`, `10` | 6 |
-| Intercept | `synth_t2_intercept0`, `-5`, `-10`, …, `-100` | 21 |
-| Slope | `synth_t2_slope100`, `98`, `96`, …, `80` | 11 |
-
-`synth_t2_ageshift0` is a separate seeded draw from the baseline, so the two
-share parameters but not random draws.
-
-### Generating the whole grid
-
-```bash
-uv run python -m tosw_synth generate --enabled --output-dir data/
-```
-
-This writes one parquet file per enabled scenario, named after the scenario.
-Expect roughly 40 minutes on a laptop for all 39 files at 250,000 rows each,
-or about a minute per 250,000-row file.
-
-## Generating every dataset for a study in one command
-
-Most simulation studies need more than the drift grid: they also need repeated
-sample pairs and a reduced-sample draw. The `suite` command builds all of it:
-
-```bash
 uv run python -m tosw_synth suite --output-dir data/
 ```
 
-It writes three groups of files:
+That is the whole workflow. `data/` is git-ignored, so generated files stay local.
 
-| Output | Contents | Used for |
-| --- | --- | --- |
-| `data/drift/<scenario>.parquet` | 39 tables, 250,000 rows each | Calibration curves, threshold selection, minimum breaking drift |
-| `data/reduced/<scenario>_n100000.parquet` | 39 tables, 100,000 rows drawn without replacement | Reduced-sample analysis |
-| `data/pairs/<scenario>/replicate_rXXXX/` | 38 drift scenarios x 1,000 replicates, 250,000 rows per time point | Repeated-sampling rates |
-| `data/pairs/pair_index.csv` | The T1-to-T2 linkage for every replicate | Tells your analysis which two files form a pair |
-
-Print the plan without generating anything:
+A full run is large (39,079 files, roughly 172 GiB, several hours). To confirm
+things work first:
 
 ```bash
-uv run python -m tosw_synth suite --dry-run
+uv run python -m tosw_synth suite --replicates 2 --n-samples 500 --output-dir data_trial
 ```
 
-Run a subset while developing:
+## What you generate
 
-```bash
-uv run python -m tosw_synth suite --replicates 5 --n-samples 1000 --skip-reduced
+`suite` writes three groups of Parquet tables, all with the same 38 columns:
+
+| Output | Contents |
+| --- | --- |
+| `data/drift/*.parquet` | 39 scenario tables, 250,000 rows each |
+| `data/reduced/*_n100000.parquet` | 39 tables, 100,000 rows drawn without replacement |
+| `data/pairs/` | 38 drift scenarios × 1,000 replicate T1–T2 pairs, plus `pair_index.csv` |
+
+Each row is one synthetic patient. A few rows from the baseline table:
+
+```text
+age_cont agegrp BLACK Albumin Prior1245 sex pHosp_1y pMort_1y Hosp_1y Mort_1y
+      40      1     0       0         0  99   0.0612   0.0019       0       0
+      69      3     0       0         1  99   0.1225   0.0137       0       0
+      69      3     0       0         2  99   0.0255   0.0112       0       0
 ```
 
-A full run writes 40,078 parquet files plus the index and needs roughly **171 GiB**
-of free disk. Each 250,000-row table is about 4.5 MiB. The pair grid dominates:
-1,000 baseline draws under `pairs/synth_t1_ageshift/` plus 38,000 drift draws.
+Columns: `age_cont`, `agegrp`, the 32 CAN clinical and utilization covariates
+(`Albumin`, `BUN`, `HCC_HXCHF`, `Prior1245`, and others, all coded as integers),
+then `pHosp_1y`, `pMort_1y`, `Hosp_1y`, and `Mort_1y`.
 
-There is no separate T1 copy inside each drift scenario's folder. A baseline
-draw depends only on the replicate index, so it is stored once and every drift
-scenario in that replicate reuses it. `pair_index.csv` records which T1 file
-belongs with which T2 file.
+Covariates keep the original coding, where `99` means "not recorded". That code is
+common: in the example rows above, `sex` is `99` and about a third of `Albumin`
+values are `99`. Treat `99` as missing rather than as a real level when you
+analyze the data.
 
-Start small and confirm the workflow before committing to a full run:
+Open them with Python, R, Stata 18+, or DuckDB — see
+[working with the data](docs/working-with-data.md).
 
-```bash
-uv run python -m tosw_synth suite --replicates 5 --n-samples 1000 --output-dir data_trial
-```
+## What is distributed
 
-Then scale up once the output looks right. A full 1,000-replicate run at
-250,000 rows takes several hours on a laptop, at roughly a minute per table.
+The repository ships a 27 MB fitted bundle under `bundles/can2014/`. It contains
+exactly three things:
 
-### Why the repeated pairs are written as pairs
+- **Distribution parameters for age** — the mean, standard deviation, minimum, and
+  maximum of the 2014 cohort age distribution.
+- **32 trained conditional predictors** — one gradient-boosted classifier per
+  covariate, each predicting that covariate from `agegrp` and the covariates
+  drawn before it.
+- **Fixed outcome configurations** — the CAN hospitalization and mortality
+  coefficient sets, the probability transform, and the Bernoulli draw settings.
 
-A replicate is a **pair**, not two unrelated tables. In replicate `r`, `t1` is
-the baseline draw at `r` and `t2` is the drift scenario at `r`. Both time points
-are independent draws, and every drift magnitude in that replicate is compared
-against the same baseline draw.
+These are parameters, coefficient values, and model weights. There is no patient
+table in the bundle, and no individual record can be read out of it.
 
-Read `pair_index.csv` rather than reconstructing the linkage from filenames:
+## How generation works
 
-```python
-import polars as pl
+Three stages, in order:
 
-root = "data/pairs"
-index = pl.read_csv(f"{root}/pair_index.csv")
+1. **Age.** Draw from a truncated normal fitted to the cohort, rounded to whole
+   years, then cut into age group `1`–`5` at 54, 64, 74, and 84 years.
+2. **Covariates.** Draw each of the 32 covariates in sequence, conditional on
+   `agegrp` and everything drawn before it. This preserves the joint structure
+   rather than only the marginal frequencies.
+3. **Outcomes.** Combine covariates through the fixed CAN linear predictors, apply
+   the scenario's `alpha` and `beta`, transform to probabilities, and draw one
+   Bernoulli outcome per row for hospitalization and mortality.
 
-row = index.filter(
-  (pl.col("t2_scenario") == "synth_t2_intercept-50") & (pl.col("replicate_index") == 0)
-).row(0, named=True)
+Full detail, including the exact equations and what each scenario parameter means,
+is in [methods](docs/methods.md).
 
-t1 = pl.read_parquet(f"{root}/{row['t1_path']}")
-t2 = pl.read_parquet(f"{root}/{row['t2_path']}")
-```
+## Scenarios
 
-Generate pairs for selected drift scenarios only:
+A scenario sets an age shift, an outcome intercept `alpha`, and an outcome slope
+`beta`. The published grid has 39 enabled scenarios: 1 baseline, 6 age-shift,
+11 slope, and 21 intercept scenarios. `uv run python -m tosw_synth scenarios`
+lists them with their seeds.
 
-```bash
-uv run python -m tosw_synth pairs \
-  --drift synth_t2_intercept-50 \
-  --drift synth_t2_slope82 \
-  --replicates 1000 \
-  --output-dir data/pairs
-```
+See the [scenario grid](docs/scenarios.md) for the full table and seed formulas.
 
-Resume an interrupted run without overwriting finished pairs:
+## Documentation
 
-```bash
-uv run python -m tosw_synth pairs --replicates 1000 --skip-existing
-```
+| Page | What it covers |
+| --- | --- |
+| [Methods](docs/methods.md) | Generation mechanism, equations, what the bundle contains |
+| [Commands](docs/commands.md) | Every command and option, including partial runs |
+| [Scenarios](docs/scenarios.md) | The scenario grid, parameters, and seeds |
+| [Working with the data](docs/working-with-data.md) | Opening files, pairing T1/T2, sanity checks |
+| [Rebuilding](docs/rebuilding.md) | Refitting the bundle with authorized VA data access |
 
-## Reproducibility: `--n-samples` and `--replicate-index`
+## Requirements and cost
 
-**`--n-samples`** sets the row count for that run. Omit it to use the manifest
-value, which is 250,000. Any positive integer works, so a quick test is cheap:
+Mac, Linux, or Windows, plus `uv`. You do not need to install Python; `uv` fetches
+the pinned version.
 
-```bash
-uv run python -m tosw_synth generate \
-  --scenario synth_t2_ageshift4 \
-  --n-samples 1000 \
-  --output data/quick_test.parquet
-```
+One 250,000-row table takes about a minute and 2.5 GB of memory and produces a
+~4.5 MiB file.
 
-**`--replicate-index`** selects which repeat draw to produce. Index `0` is the
-published draw and returns the scenario's base seed unchanged. Higher indexes
-map to their own independent random stream. The default is `0`. This is how you
-build repeated samples for simulation studies without changing the scenario
-definition:
+## Privacy
 
-```bash
-uv run python -m tosw_synth generate \
-  --scenario synth_t1_ageshift \
-  --n-samples 250000 \
-  --replicate-index 17 \
-  --output data/synth_t1_ageshift_r17.parquet
-```
+The bundle stores fitted parameters rather than patient rows, and no VA data is
+redistributed here. Fitted parameters are **not** a formal privacy guarantee,
+however: gradient-boosted trees and summary statistics can retain information
+about the cohort they were fit on. The generator implements no differential
+privacy.
 
-Replicate indexes are independent across scenarios. Two different scenarios
-never share a stream at any index, so a repeated-sample analysis really does
-compare independent draws.
+Use it for methods research, teaching, and workflow prototyping. Do not present
+generated data as a de-identified copy of real patients, and do not use it to make
+claims about real individuals. See [methods](docs/methods.md#a-note-on-privacy).
 
-The same scenario, row count, and replicate index always reproduce the same
-frame on the same pinned environment. Pin `uv.lock` and the `tabdat-synth`
-release if you need that guarantee across machines. Byte-identical output is
-not promised across different library versions.
-
-## Drawing a smaller analysis sample
-
-Subsampling reads a generated file and draws rows **without replacement**. It
-does not refit any model, so it is fast and deterministic:
-
-```bash
-uv run python -m tosw_synth subsample \
-  --input data/synth_t2_ageshift4.parquet \
-  --n-samples 100000 \
-  --seed 343 \
-  --output data/synth_t2_ageshift4_n100000.parquet
-```
-
-Change `--seed` to draw a different subsample from the same generated file.
-Every column is carried through unchanged.
-
-## Privacy and intended use
-
-The bundle stores **fitted parameters from a 2014 VA CAN cohort**, not patient
-rows. Categorical models are gradient-boosted trees over aggregate splits, and
-the numeric steps store means, standard deviations, and bounds. No patient
-identifier, no source row, and no original extract is included in this
-repository.
-
-Those fitted parameters are **not a formal privacy guarantee.** Gradient-boosted
-models and empirical summaries can leak information about the cohort they were
-fit on, especially for rare categories, and this generator implements no
-differential privacy. Treat it as a tool for methods research, teaching, and
-workflow prototyping rather than as a public-release mechanism for sensitive
-data. Do not present generated data as a de-identified copy of real patients,
-and do not use it to make claims about real individuals.
-
-## Rebuilding or refitting the bundle with VA data access
-
-The bundle shipped here is ready to use, and most users never need this section.
-It matters if you hold authorized access to the VA CAN extract and want to
-rebuild the bundle against your own extract, re-run the fit for a different
-cohort year, or change the model specification.
-
-### What you need
-
-Authorized access to the source extract, specifically
-`all_can_2014_v2_ordinalver.parquet`, plus the approvals your data use
-agreement requires. The extract is never distributed with this repository.
-
-### Point the fitter at your extract
-
-Set `VA_DIR` to the directory holding the extract, then rebuild:
-
-```bash
-export VA_DIR=/path/to/can/extract
-uv run --extra fit python -c "from tosw_synth.fit import rebuild; print(rebuild())"
-```
-
-The rebuild:
-
-1. reads `all_can_2014_v2_ordinalver.parquet` from `VA_DIR`
-2. drops `patienticn`, `yr`, `Death1y`, and `intercept`
-3. draws the 50 percent fitting sample with seed `343`
-4. fits 32 covariate classifiers, the age summary, and the two outcome
-   coefficient sets
-5. rewrites `bundles/can2014/` and records the fit in `FIT_INFO.txt`
-
-Expect about 10 minutes and roughly 4 GB of memory.
-
-### Refitting for a different cohort or specification
-
-The fit is driven by `src/tosw_synth/fit.py`. To fit a different cohort year,
-change `SOURCE_FILENAME`. To change the model, edit `build_spec`. To change the
-covariate order, edit the order the manifest and `covariate_columns` produce.
-
-After any refit, regenerate your data: the bundle now carries different fitted
-parameters, so previously generated files no longer correspond to it.
-
-### Keeping a rebuild private
-
-A rebuilt bundle still contains fitted parameters rather than patient rows, but
-those parameters come from your extract. Publish it only if your data use
-agreement permits it, and rerun the leak check before sharing:
-
-```bash
-grep -rlE "/Volumes/|/Users/|patienticn" bundles/can2014/ || echo "no private paths found"
-```
 ## Troubleshooting
 
-**`uv: command not found`.** Install `uv` with the command in
-[What you need](#what-you-need), then open a new terminal so your shell picks up
-the new path.
-
-**`unknown scenario`.** The name must match the manifest exactly. Run
-`uv run python -m tosw_synth scenarios` to see every scenario you can generate.
-
-**`fitted bundle package version mismatch`.** The bundle was written by a
-different `tabdat-synth` release. Run `uv sync` to install the pinned version.
-
-**`cannot draw N rows without replacement`.** The subsample is larger than the
-input file. Generate a bigger base file first, or lower `--n-samples`.
-
-**Generation is slow or runs out of memory.** A 250,000-row scenario needs about
-2.5 GB of memory and roughly a minute. Lower `--n-samples`, or generate one
-scenario at a time instead of using `--enabled`.
+| Symptom | Fix |
+| --- | --- |
+| `uv: command not found` | Install `uv`, then open a new terminal |
+| `unknown scenario` | Run `uv run python -m tosw_synth scenarios` for valid names |
+| `fitted bundle package version mismatch` | Run `uv sync` to install the pinned version |
+| `cannot draw N rows without replacement` | The subsample exceeds the input; lower `--n-samples` |
+| Slow or out of memory | Lower `--n-samples`, or generate one scenario at a time |
 
 ## Citation
 
-This generator is built on **`tabdat-synth`**, the spec-driven synthesis engine
-that fits and applies the bundle. If you use this generator, please cite both
-the generator and `tabdat-synth`.
+Built on **`tabdat-synth`** 0.2.0, the spec-driven synthesis engine that fits and
+applies the bundle.
 
-The generator pins `tabdat-synth==0.2.0`. See `pyproject.toml` and `uv.lock` for
-the exact resolved release.
-
-### Bibliography
-
-Park S. *tosw-synthetic-va-data-generator: semi-synthetic VA Care Assessment
-Needs dataset generator* (version 0.1.0) [computer software]. GitHub.
-https://github.com/SaehwanPark/tosw-synthetic-va-data-generator
-
-Park S. *tabdat-synth: spec-driven synthetic tabular data generation with
-reusable fitted bundles* (version 0.2.0) [computer software]. GitHub and PyPI.
-https://github.com/SaehwanPark/tabdat-synth and
-https://pypi.org/project/tabdat-synth/0.2.0/
-
-Ke G, Meng Q, Finley T, Wang T, Chen W, Ma W, Ye Q, Liu TY. LightGBM: a highly
-efficient gradient boosting decision tree. In: *Advances in Neural Information
-Processing Systems 30*; 2017:3146-3154.
-
-Wang L, Porter B, Maynard C, Evans G, Bryson C, Sun H, Gupta I, Lowy E,
-McDonell MB, Frisbee K, Nielson C, Kirkland K, Fihn SD. Predicting risk of
-hospitalization or death among patients receiving primary care in the Veterans
-Health Administration. *Medical Care*. 2013;51(4):368-373.
-doi:10.1097/MLR.0b013e31827da95a
-
-### BibTeX
+If you use this generator, please cite it and `tabdat-synth`:
 
 ```bibtex
 @software{tosw_synthetic_va_data_generator,
@@ -467,31 +171,11 @@ doi:10.1097/MLR.0b013e31827da95a
   url     = {https://github.com/SaehwanPark/tabdat-synth},
   note    = {PyPI: https://pypi.org/project/tabdat-synth/0.2.0/}
 }
-
-@inproceedings{ke2017lightgbm,
-  author    = {Ke, Guolin and Meng, Qi and Finley, Thomas and Wang, Taifeng
-               and Chen, Wei and Ma, Weidong and Ye, Qiwei and Liu, Tie-Yan},
-  title     = {{LightGBM}: A Highly Efficient Gradient Boosting Decision Tree},
-  booktitle = {Advances in Neural Information Processing Systems 30},
-  pages     = {3146--3154},
-  year      = {2017}
-}
-
-@article{wang2013predicting,
-  author  = {Wang, Li and Porter, Brian and Maynard, Charles and Evans, Greg
-             and Bryson, Chris and Sun, Haili and Gupta, Indra and Lowy, Elliott
-             and McDonell, Michael B. and Frisbee, Kathleen and Nielson, Chris
-             and Kirkland, Kimberly and Fihn, Stephan D.},
-  title   = {Predicting Risk of Hospitalization or Death Among Patients
-             Receiving Primary Care in the Veterans Health Administration},
-  journal = {Medical Care},
-  volume  = {51},
-  number  = {4},
-  pages   = {368--373},
-  year    = {2013},
-  doi     = {10.1097/MLR.0b013e31827da95a}
-}
 ```
+
+The generator also depends on the CAN risk model of Wang et al. (2013, *Medical
+Care* 51:368–373, doi:10.1097/MLR.0b013e31827da95a) and on LightGBM
+(Ke et al., NeurIPS 2017, pp. 3146–3154). Cite both if your work relies on them.
 
 ## License
 
